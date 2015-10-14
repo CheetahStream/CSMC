@@ -4,9 +4,9 @@
             <import addon="xbmc.addon" version="12.0.0"/>
         </requires>
         <extension point="xbmc.addon.repository" name="CSRepoV0.1.0">
-            <info compressed="false">https://cdn.rawgit.com/CheetahStream/Kodi/master/_repow/addons.xml</info>
-            <checksum>https://cdn.rawgit.com/CheetahStream/Kodi/master/_repow/addons.xml.md5</checksum>
-            <datadir zip="true">https://cdn.rawgit.com/CheetahStream/Kodi/tree/master/_repow/</datadir>
+            <info compressed="false">https://cdn.rawgit.com/CheetahStream/Kodi/master/_repo/addons.xml</info>
+            <checksum>https://cdn.rawgit.com/CheetahStream/Kodi/master/_repo/addons.xml.md5</checksum>
+            <datadir zip="true">https://cdn.rawgit.com/CheetahStream/Kodi/tree/master/_repo/</datadir>
             <hashes>false</hashes>
         </extension>
         <extension point="xbmc.addon.metadata">
