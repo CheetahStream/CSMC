@@ -1,3 +1,68 @@
+[B]v1.8.7(Wednesday, 8 July 2015):[/B]
+  - Fixed downloads with various resolvers, should now save to proper filename
+  - Fixed small bug with mysql syntax
+
+[B]v1.8.6(Friday, 19 June 2015):[/B]
+  - Fixed Resolvers:
+    - MightyUpload
+  - Added Resolvers:
+    - 24Uploading
+    - XVidStage
+
+[B]v1.8.5(Monday, 15 June 2015):[/B]
+  - Fixed Resolvers:
+    - TusFiles
+    - ClicknUpload
+    - 180Uploads
+    - VidPlay
+
+[B]v1.8.4(Wednesday, 15 April 2015):[/B]
+  - Changed Favourites to sort properly - ignore 'The', 'A' etc.
+  - Fixed 180Upload
+  - Fixed HugeFiles
+  - New Resolvers:
+    - TusFiles
+    - XFileLoad
+    - ClicknUpload
+    - MightyUpload
+
+[B]v1.8.3(Monday, 23 February 2015):[/B]
+  - Fixed Favourites migration issue duplicating favourite entries
+  
+[B]v1.8.2(Friday, 20 February 2015):[/B]
+  - Fixed HugeFiles captcha problems
+  - Converted Favourites to SQL database
+  
+[B]v1.8.1(Tuesday, 10 February 2015):[/B]
+  - Fixed yet another issue with favourites, was failing to create sub-folders on some systems
+  - Small code cleanups from new changes
+
+[B]v1.8.0(Monday, 09 February 2015):[/B]
+  - Fixed (hopefully) all issues with favourites
+  - Added new Icefilms own cache DB
+    - Currently only allows for web page caching, this will help speed up navigation
+    - Future will move favourites to the cache DB, as well as include resume support
+    - Includes MySQL database support
+  - Reworked code for fetching sources, should see a good speed increase here
+  
+[B]v1.7.2(Thursday, 05 February 2015):[/B]
+  - Fixed error in adding Movie favourites - any favourites added since 1.7.0 will need to be deleted and re-added
+  - Removed dependency on pyxbmct to allow Frodo users to continue using
+
+[B]v1.7.1(Tuesday, 03 February 2015):[/B]
+  - Corrected issue loading sources when meta data is turned off
+  - Fixed search function that wasn't using user entered Icefilms URL
+  
+[B]v1.7.0(Tuesday, 03 February 2015):[/B]
+  - Fixed MovReel resolver
+  - Fixed BillionUploads resolver
+  - Switch to use xbmcvfs to allow network file operations - downloads
+  - Removed need to download meta data image packs, only database file is required for meta data now
+  - Code optimizations
+  - Shrink images to reduce addon zip by 70%
+  - Remove images for sources, now displays movie/tvshow meta data & poster
+  - Correct downloads to use original file extension instead of always changing to .avi (legacy code)
+
 [B]v1.6.0(Tuesday, 11 November 2014):[/B]
   - Fixed HugeFiles resolver
   - Added 360gig resolver

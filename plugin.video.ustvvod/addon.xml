@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.ustvvod"
+       name="USTV VoD"
+	   version="1.3.0"
+	   provider-name="BlueCop, moneymaker, slices, zero">
+  <requires>
+    <import addon="xbmc.python"                       version="2.1.0"/>
+    <import addon="script.module.beautifulsoup4"      version="4.3.2"/>
+    <import addon="script.module.coveapi"             version="0.2.1"/>
+	<import addon="script.module.dnspython"           version="1.12.0"/>
+    <import addon="script.module.free.cable.database" version="0.0.5"/>
+    <import addon="script.module.html5lib"            version="0.999.0"/>
+    <import addon="script.module.pyamf"               version="0.6.2"/>
+    <import addon="script.module.simplejson"          version="3.3.0"/>
+    <import addon="script.module.socksipy"            version="2.0.0"/>
+	<import addon="script.module.stem"                version="1.2.2"/>
+	<import addon="script.module.cssutils"            version="1.0"/>
+	<import addon="script.module.pycaption"           version="0.5.1c1"/>
+	<import addon="script.common.plugin.cache"        version="0.9.1"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+        <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">USTV Video-on-Demand</summary>
+    <summary lang="de">USTV Video-on-Demand</summary>
+    <description lang="en">Your Video-on-Demand streaming platform from US TV Networks</description>
+    <description lang="de">Ihre Video-on-Demand-Streaming-Plattform aus US-TV-Networks</description>
+    <disclaimer lang="en">Some parts of this addon may not be legal in your country of residence - please check with your local laws before installing.</disclaimer>
+    <disclaimer lang="de">Einige Teile dieses Addons sind möglicherweise in Ihrem Land nicht legal - bitte prüfen Sie Ihre lokal gültigen Gesetze vor der Installation.</disclaimer>
+    <language>en de</language>
+    <platform>all</platform>
+	<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+    <forum>http://forum.xbmc.org/showthread.php?tid=166099</forum>
+	<website></website>
+	<email></email>
+	<source>https://github.com/moneymaker365/plugin.video.ustvvod</source>
+  </extension>
+</addon>

@@ -115,7 +115,7 @@ def cleanUnicode(string):
 #interface:
 
 def clean(html,strip=False):
-    cleaned = unescape(html)
+    cleaned = unescape(html.decode('utf-8', 'ignore'))
     if strip == True:
         return cleanUnicode(cleaned)
     else:

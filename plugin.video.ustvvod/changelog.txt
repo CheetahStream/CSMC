@@ -1,0 +1,356 @@
+version 1.3.0
+
+  * fix common issues
+
+version 1.2.9
+
+  * fix CC
+  * fix common issues
+
+version 1.2.8
+
+  * fix CC
+
+version 1.2.7
+
+  * fix SyFy
+  * added description for SyFy episodes
+  * update german language
+  * added support for 1080p in ABC
+  * fix CC
+
+version 1.2.6
+
+  * common fixes
+  * NBCU proxy bypass options
+
+version 1.2.5c
+
+  * correction
+
+version 1.2.5
+
+  * correct CC season labels
+  * quality selection restored in food network
+  * common fixes
+  * added a queue option
+  * added script.module.cssutils
+  * added script.module.pycaption
+
+version 1.2.4
+
+  * fix for Larry Wilmore Sghow
+  * add foodnetwork
+  * add option to use ssl support
+  * fix for FOX playback
+  * new suppress quality selection option
+  * fix CBS bug
+  * added foodnetwork in HD 
+
+version 1.2.3
+
+  * removed script.ustvvodlibraryautoupdate
+
+version 1.2.2
+
+  * fix CBS, TBS, MSNBC and SpikeTV, NatGeo
+  * apply season caching to all seasons
+  * additional Crackle alias
+  * fix PBS, tvland, MSNBC, nicktoon export
+  * fix Cartoon Netwoork
+  * fix common formatting
+  * fix common problems
+  * added script.ustvvodlibraryautoupdate
+
+version 1.2.1
+
+  * fix Marvel Kids for library export
+  * fix for quality selections
+  * fix DNS connection issue
+  * stabilize proxy connection
+  * fix CW
+  * fix NBC Classics
+  * fix common problems
+
+version 1.2.0
+
+  * fix CW
+  * fix common problems
+  * update CBS
+
+version 1.1.9
+
+  * fix SpikeTV
+  * fix common issues
+  * fix library problem on Android Devices
+  * fix context menu bug
+  * fix ABC logo
+
+version 1.1.8
+
+  * added missing USA full episodes
+  * fix frodo compatibilty
+  * common fixes
+  * proxy fixes
+  * added dnspython script
+  * updated language files
+  * fix for ABC Disney
+  * fix for ABC
+
+version 1.1.7
+
+  * fix for NBC on Android
+  * fix for web only TNT Shows
+  * HLS support for TheCW
+  * HLS support for Turner Stations
+  * DNS/Proxy support for Turner Stations
+  * fix for TNT/TBS episode numbers
+  * fix for truTV
+  * fix for adultswim tve episodes
+  * add quality selection for ABC/Disney
+  * fix for bad episode numbers on ABC
+  * add timeout to Proxy
+  * tidy up ABC channels
+  * fix date sort
+  * fix quality selection on FOX and ABC
+  * low bitrate protection for FOX
+  * allowed shows list to pass show plot from site
+  * made favorites display behavior configurable
+  * fix german translation + proxy makeup
+  * fix for bravo and  missing USA shows
+  * fix for The Late Late Show
+
+version 1.1.6
+
+  * fix for NBC (Android)
+  * common changes for viacomm
+  * add sort options for episodes
+  * add quality selection for PBSkids
+  * CW - low bitrate protection
+  * common changes for translations
+  * add HLS stream type for CW
+  * fix for movies with no description on TCM
+  * fix for MSNBC
+  * common changes for TNT shows
+
+version 1.1.5
+
+  * fix for CBS
+  * added geo-block massage in NBC
+  * improve settings tab
+  * added message explaining account to CBS
+  * fix german translation
+
+version 1.1.4
+
+  * fix for NBC on Android
+  * fix for FOX
+  * fix for ABC
+  * changed TCM logo
+
+version 1.1.3
+
+  * improve auto matching on show names
+  * fix full episodes on some NBC shows
+  * fix for NICK and CC playback
+  * display episode numbers for CBS
+  * improve movie display for Crackle, hide movies containing only clips
+  * add setting for clip-only content
+  * fix for TVland
+  * remove tvdb lookup entirely from Crackle movies
+  * apply 'hide clip only' to ABC/Disney
+  * tidy up shows and seasons for turner stations
+  * clip only filters for FOX and Crackle
+  * TVland hide clips only
+  * fix Cartoon Network
+
+version 1.1.2
+
+  * standardise exception notifications
+  * fix CBS issues on android
+  * fix for favorites
+  * fix for viacomm subs
+  * fix for CSB shows with no link mapping
+  * code changes for viacomn and for how to connect
+  * fix USA NETWORK and changed code filename to main_nbcu
+  * added season selection to CBS
+  * optimization for viacomm code
+  * fix for NICK
+  * fix for NCIS
+
+version 1.1.1
+
+  * Geoblock handling in CBS and NBCU
+  * make CBS Helix compatible
+  * make CC Helix compatible
+  * make A&E Helix compatible
+  * fix AMC
+  * fix NBCU max bitrate
+  * exclude none working content at A&E
+  * make TVLAND Helix compatible
+  * hide quality selection on MSNBC
+  * fix exception on playing Flash S01E02 on The CW with subtitles
+  * fix show loading with no tvbb lookup
+  * restore tvdb data when turned back on
+  * rewrite the AETV wrapper
+  * added Lifetime channel
+  * added History channel
+  * code cleanup
+  * added CBS login support
+  * fix VH1
+  * fix MTV
+  * added CMT channel
+  * added LogoTV channel
+  * hide amazon only episodes in CBS
+  * fix CBS: hide  season items that are empty and fix episode identifiers for clips
+
+version 1.1.0
+
+  * replace polling in viacomm with events
+  * added additional logging
+  * fix multi event issue on stop viacomm
+  * fixed CBS quality selection
+  * handle seeking in CC
+  * fixed errors with stopping server
+  * tidy up error reporting in viacomm
+  * handle dns proxy exceptions
+  * Added episode identifier to name
+  * updated german language
+  * encoding fix on CBS
+  * make episode identify optional
+  * added support for a third dns proxy ip
+  * fix proxy settings
+  * simplify tor set up
+  * fix adultswim
+  * new truTV logo
+  * new crackle logo
+  * fix CW
+  * remove unnecessary print codes
+  * increased getURL timeout (fixes issues with some abc shows)
+  * integrated custom events with ABC/Disney (May reduce the odd errors people have seen.)
+  * updated NICK (switches to JSON API)
+  * fix/rewrote MTV; changed to API loading
+  * tidy up episode names on MTV
+  * fix SyFy
+  * fix for BRAVO playback
+  * hide series identifier if there isn't one
+  * use common code for MSNBC episodes
+  * issue #22 solution
+  * MTV code simplified
+
+version 1.0.9
+
+  * added script.module.stem
+  * added tor connection
+  * fixed linux lf format for debug log
+  * missed rename of option
+  * fixed https connection over proxy
+  * fixed description of Crackle
+  * fixed view of root from tvshows to root
+  * fixed confluence view list
+  * fix settings
+  * added additional tor parameters
+  * update dnspython
+  * improve series id matching
+  * fix minimum bitrate protection on viacomm
+  * fixed quality selection in viacomm
+
+version 1.0.8
+
+  * fix get revision
+  * fix NBC
+  * updated connection
+
+version 1.0.7
+
+  * updated german language
+  * auto correct sub title delay
+  * Simplify delays
+  * fix for SouthPark (Redirect to southpark.cc.com)
+  * geoblock error handling
+
+version 1.0.6
+
+  * quality selection added to adult swim and cartoon
+  * quality selection tnt and tbs
+  * fixed subtile and multipart playback clash
+  * Viacom: wait a bit so the segment can load
+  * Remove accidental committed print statement
+
+version 1.0.5
+
+  * tidy up for all shows and tvdb
+  * fix MTV
+  * tvdb lookup changes
+  * Adult Swim show list change
+  * added Cartoon Network
+  * added TBS
+  * refactored turner stations
+  * made tvdb lookup configurable
+  * added TNT
+  * aded truTV and settings option
+  * allow m3u8 with multiple keys
+  * ignore CC items that are not shows
+  * new stream method for Viacom
+  * fixed issue with playback resetting to 0
+  * fix for type change in settings
+  * fix South Park
+  * fix for subtitles
+  * tidy up ‚main_viacom.py‘ file
+
+version 1.0.4
+
+  * fix for some environments
+  * filter out duplicates from pbs
+  * fix tonight show eps with no description
+  * fix common lookup
+  * tidy up shows in pbs
+  * fix for MTV and SyFy
+  * fix unicode issue on cleanup
+  * Comedy POC
+  * fixes for CBS
+  * fix for masterlist in NatGeo
+  * clean up all shows
+  * .gitignore for .bak files
+
+version 1.0.3
+
+  * some seasons () do not have an 'url' argument
+  * make Cosmos work on FOX
+  * episode and seasons labels in PBS
+  * fixes all shows
+  * ignore 'the' in sorting site list
+  * fix add to favorites
+  * fix db creation problem
+  * fix for failing clips on Nickelodeon
+  * delete cache files
+  * fix NatGeo
+  * fix NatGeo Wild
+  * fix issue with db refresh
+  * fix issues with ABC shows in all shows
+  * exclude close button from shows on ComedyCentral
+  * list all video feeds for Colbert Report/Daily Show
+
+version 1.0.2
+
+  * fix for master list
+  * fixed issues with “all shows“
+  * added comedy central shows
+  * fix for comedy central in “all shows“
+  * fixed Daily Show & Colbert Report
+  * refresh TVDB data was broken
+
+version 1.0.1
+
+  * context menu - forgotten name changes
+  * fixed Daily Show & Colbert Report
+  * sort networks alphabetically
+  * fixed none available SouthPark shows
+  * create README.md (GitHub source)
+  * use variable library path instead of remapping path
+  * fixed NatGeo network
+  * fixed Tonight Show
+
+version 1.0.0
+
+  * initial release of USTV VoD (formerly FREE CABLE)

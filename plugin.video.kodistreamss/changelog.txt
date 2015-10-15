@@ -1,0 +1,9 @@
+
+
+[B]Version 1.1.1[/B]
+
+Fixed a bug when installing with Auto Update - with the help of husham.com
+
+[B]Version 1.0.0[/B]
+
+-Intial release

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<category label="Login">
+		<setting id="hqusername" type="text" label="Username" default="" visible="true"/>
+		<setting id="hqpassword" type="text"label="Password" default="" visible="true" option="hidden" />
+		<setting label="Visit http://sportsdonkey.club to signup for your account" type="lsep" />
+	</category>
+</settings>

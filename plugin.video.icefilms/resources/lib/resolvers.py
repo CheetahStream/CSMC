@@ -31,39 +31,47 @@ def handle_captchas(url, html, data, dialog):
 
     #SolveMedia captcha
     if solvemedia:
-       dialog.close()
-       html = net.http_GET(solvemedia.group(1), headers=headers).content
-       hugekey=re.search('id="adcopy_challenge" value="(.+?)">', html).group(1)
+        dialog.close()
+        html = net.http_GET(solvemedia.group(1), headers=headers).content
+
+        for match in re.finditer(r'type=hidden.*?name="([^"]+)".*?value="([^"]+)', html):
+            name, value = match.groups()
+            data[name] = value       
+               
+        #Check for alternate puzzle type - stored in a div
+        alt_frame = re.search('<div><iframe src="(/papi/media[^"]+)', html)
+        if alt_frame:
+            html = net.http_GET("http://api.solvemedia.com%s" % alt_frame.group(1)).content
+            alt_puzzle = re.search('<div\s+id="typein">\s*<img\s+src="data:image/png;base64,([^"]+)', html, re.DOTALL)
+            if alt_puzzle:
+                open(puzzle_img, 'wb').write(alt_puzzle.group(1).decode('base64'))
+        else:
+            open(puzzle_img, 'wb').write(net.http_GET("http://api.solvemedia.com%s" % re.search('<img src="(/papi/media[^"]+)"', html).group(1)).content)
        
-       #Check for alternate puzzle type - stored in a div
-       alt_puzzle = re.search('<div><iframe src="(/papi/media.+?)"', html)
-       if alt_puzzle:
-           open(puzzle_img, 'wb').write(net.http_GET("http://api.solvemedia.com%s" % alt_puzzle.group(1)).content)
-       else:
-           open(puzzle_img, 'wb').write(net.http_GET("http://api.solvemedia.com%s" % re.search('<img src="(/papi/media.+?)"', html).group(1)).content)
-       
-       img = xbmcgui.ControlImage(450,15,400,130, puzzle_img)
-       wdlg = xbmcgui.WindowDialog()
-       wdlg.addControl(img)
-       wdlg.show()
+        img = xbmcgui.ControlImage(450,15,400,130, puzzle_img)
+        wdlg = xbmcgui.WindowDialog()
+        wdlg.addControl(img)
+        wdlg.show()
     
-       xbmc.sleep(3000)
+        xbmc.sleep(3000)
 
-       kb = xbmc.Keyboard('', 'Type the letters in the image', False)
-       kb.doModal()
-       capcode = kb.getText()
+        kb = xbmc.Keyboard('', 'Type the letters in the image', False)
+        kb.doModal()
+        capcode = kb.getText()
 
-       if (kb.isConfirmed()):
-           userInput = kb.getText()
-           if userInput != '':
-               solution = kb.getText()
-           elif userInput == '':
-               raise Exception ('You must enter text in the image to access video')
-       else:
-           wdlg.close()
-           raise Exception ('Captcha Error')
-       wdlg.close()
-       data.update({'adcopy_challenge': hugekey,'adcopy_response': solution})
+        if (kb.isConfirmed()):
+            userInput = kb.getText()
+            if userInput != '':
+                solution = kb.getText()
+            elif userInput == '':
+                raise Exception ('You must enter text in the image to access video')
+        else:
+            wdlg.close()
+            raise Exception ('Captcha Error')
+        wdlg.close()
+        data['adcopy_response'] = solution
+        html = net.http_POST('http://api.solvemedia.com/papi/verify.noscript', data)       
+        data.update({'adcopy_challenge': data['adcopy_challenge'],'adcopy_response': 'manual_challenge'})
 
     #Google Recaptcha
     elif recaptcha:
@@ -142,12 +150,12 @@ def resolve_180upload(url):
                 if link:
                     addon.log('180Upload Link Found: %s' % link.group(1))
                     dialog.update(100)
-                    return link.group(1)
+                    return link.group(1) + '|User-Agent=%s' % (USER_AGENT)
                 else:
                     link = re.search("'file','(.+?)'", js.replace('\\',''))
                     if link:
                         addon.log('180Upload Link Found: %s' % link.group(1))
-                        return link.group(1)                    
+                        return link.group(1) + '|Referer=%s&User-Agent=%s' % (url, USER_AGENT)
                     
             #Cannot get video without captcha, so try regular url
             html = net.http_GET(url).content
@@ -179,7 +187,7 @@ def resolve_180upload(url):
         link = re.search('id="lnk_download" href="([^"]+)', html)
         if link:
             addon.log_debug( '180Upload Link Found: %s' % link.group(1))
-            return link.group(1)
+            return link.group(1) + '|Referer=%s&User-Agent=%s' % (url, USER_AGENT)
         else:
             raise Exception('Unable to resolve 180Upload Link')
 
@@ -190,38 +198,49 @@ def resolve_180upload(url):
         dialog.close()
 
 
-def resolve_megafiles(url):
+def resolve_24uploading(url):
 
     try:
         dialog = xbmcgui.DialogProgress()
-        dialog.create('Resolving', 'Resolving MegaFiles Link...')
+        dialog.create('Resolving', 'Resolving 24Uploading Link...')
         dialog.update(0)
         
-        addon.log_debug('MegaFiles - Requesting GET URL: %s' % url)
+        addon.log_debug('24Uploading - Requesting GET URL: %s' % url)
         html = net.http_GET(url).content
 
-        dialog.update(50)
+        dialog.update(33)
 
         wrong_captcha = True
         
         while wrong_captcha:
         
             data = {}
-            r = re.findall(r'type="hidden" name="(.+?)" value="(.+?)">', html)
-
+            r = re.findall('type="(hidden|submit)" name="(.+?)" value="(.*?)">', html)
             if r:
-                for name, value in r:
+                for none, name, value in r:
                     data[name] = value
             else:
-                raise Exception('Unable to resolve MegaFiles Link')
+                raise Exception('Unable to resolve 24Uploading Link')
+                
+            addon.log('24Uploading - Requesting POST URL: %s DATA: %s' % (url, data))
+            html = net.http_POST(url, data).content                
+            dialog.update(66)
 
+            data = {}
+            r = re.findall('type="(hidden|submit)" name="(.+?)" value="(.*?)">', html)
+            if r:
+                for none, name, value in r:
+                    data[name] = value
+            else:
+                raise Exception('Unable to resolve 24Uploading Link')
+            
             #Handle captcha
             data = handle_captchas(url, html, data, dialog)
 
-            dialog.create('Resolving', 'Resolving MegaFiles Link...') 
-            dialog.update(50)                  
+            dialog.create('Resolving', 'Resolving 24Uploading Link...') 
+            dialog.update(66)
 
-            addon.log_debug('MegaFiles - Requesting POST URL: %s' % url)
+            addon.log('24Uploading - Requesting POST URL: %s DATA: %s' % (url, data))   
             html = net.http_POST(url, data).content
 
             wrong_captcha = re.search('<div class="err">Wrong captcha</div>', html)
@@ -230,19 +249,76 @@ def resolve_megafiles(url):
             
         dialog.update(100)
         
-        link = re.search("var download_url = '(.+?)';", html)
+        link = re.search('<div class="btn_down">.+<a href="(.+?)" style="display:block;">', html, re.DOTALL)
         if link:
-            addon.log_debug('MegaFiles Link Found: %s' % link.group(1))
+            addon.log_debug('24Uploading Link Found: %s' % link.group(1))
             return link.group(1)
         else:
-            raise Exception('Unable to resolve MegaFiles Link')
+            raise Exception('Unable to resolve 24Uploading Link')
 
     except Exception, e:
-        addon.log_error('**** MegaFiles Error occured: %s' % e)
+        addon.log_error('**** 24Uploading Error occured: %s' % e)
         raise
     finally:
         dialog.close()
+
+
+def resolve_clicknupload(url):
+
+    try:
+
+        #Show dialog box so user knows something is happening
+        dialog = xbmcgui.DialogProgress()
+        dialog.create('Resolving', 'Resolving ClicknUpload Link...')       
+        dialog.update(0)
         
+        addon.log('ClicknUpload - Requesting GET URL: %s' % url)
+        html = net.http_GET(url).content
+        
+        dialog.update(33)
+        
+        #Check page for any error msgs
+        if re.search('<b>File Not Found</b>', html):
+            addon.log_error('***** ClicknUpload - File is deleted')
+            raise Exception('File has been deleted from the host')
+
+        #Set POST data values
+        data = {}
+        r = re.findall('type="(hidden|submit)" name="(.+?)" value="(.*?)">', html)
+        if r:
+            for none, name, value in r:
+                data[name] = value
+                
+        addon.log('ClicknUpload - Requesting POST URL: %s DATA: %s' % (url, data))                
+        html = net.http_POST(url, data).content
+        dialog.update(66)
+
+        data = {}
+        r = re.findall('type="(hidden|submit)" name="(.+?)" value="(.*?)">', html)
+        if r:
+            for none, name, value in r:
+                data[name] = value
+
+        #Check for captcha
+        data = handle_captchas(url, html, data, dialog)                
+                
+        addon.log('ClicknUpload - Requesting POST URL: %s DATA: %s' % (url, data))                                
+        html = net.http_POST(url, data).content
+
+        #Get download link
+        dialog.update(100)
+        link = re.search("onClick\s*=\s*\"window\.open\('([^']+)", html)
+        if link:
+            return link.group(1) + '|User-Agent=%s' % USER_AGENT
+        else:
+            raise Exception("Unable to find final link")
+
+    except Exception, e:
+        addon.log_error('**** ClicknUpload Error occured: %s' % e)
+        raise
+    finally:
+        dialog.close()
+
 
 def resolve_vidhog(url):
 
@@ -321,7 +397,7 @@ def resolve_vidplay(url):
         request.add_header('Referer', url)
         response = urllib2.urlopen(request)
         redirect_url = re.search('(http://.+?)video', response.geturl()).group(1)
-        download_link = redirect_url + filename
+        download_link = redirect_url + filename  + '|Referer=%s&User-Agent=%s' % (url, USER_AGENT)
         
         dialog.update(100)
 
@@ -333,69 +409,6 @@ def resolve_vidplay(url):
     finally:
         dialog.close()
         
-
-def resolve_sharebees(url):
-
-    try:
-        
-        if addon.get_setting('sharebees-account') == 'true':
-            addon.log_debug('ShareBees - Setting Cookie file')
-            cookiejar = os.path.join(cookie_path,'sharebees.lwp')
-            net.set_cookies(cookiejar)
-        
-        #Show dialog box so user knows something is happening
-        dialog = xbmcgui.DialogProgress()
-        dialog.create('Resolving', 'Resolving ShareBees Link...')       
-        dialog.update(0)
-        
-        addon.log_debug('ShareBees - Requesting GET URL: %s' % url)
-        html = net.http_GET(url).content
-        
-        dialog.update(50)
-        
-        #Set POST data values
-        #op = re.search('''<input type="hidden" name="op" value="(.+?)">''', html, re.DOTALL).group(1)
-        op = 'download1'
-        usr_login = re.search('<input type="hidden" name="usr_login" value="(.*?)">', html).group(1)
-        postid = re.search('<input type="hidden" name="id" value="(.+?)">', html).group(1)
-        fname = re.search('<input type="hidden" name="fname" value="(.+?)">', html).group(1)
-        method_free = "method_free"
-        
-        data = {'op': op, 'usr_login': usr_login, 'id': postid, 'fname': fname, 'referer': url, 'method_free': method_free}
-        
-        addon.log_debug('ShareBees - Requesting POST URL: %s DATA: %s' % (url, data))
-        html = net.http_POST(url, data).content
-        
-        dialog.update(100)
-
-        link = None
-        sPattern = '''<div id="player_code">.*?<script type='text/javascript'>(eval.+?)</script>'''
-        r = re.search(sPattern, html, re.DOTALL + re.IGNORECASE)
-        
-        if r:
-            sJavascript = r.group(1)
-            sUnpacked = jsunpack.unpack(sJavascript)
-            
-            #Grab first portion of video link, excluding ending 'video.xxx' in order to swap with real file name
-            #Note - you don't actually need the filename, but for purpose of downloading via Icefilms it's needed so download video has a name
-            sPattern  = '''("video/divx"src="|addVariable\('file',')(.+?)video[.]'''
-            r = re.search(sPattern, sUnpacked)              
-            
-            #Video link found
-            if r:
-                link = r.group(2) + fname
-                return link
-
-        if not link:
-            addon.log_debug('***** ShareBees - Link Not Found')
-            raise Exception("Unable to resolve ShareBees")
-
-    except Exception, e:
-        addon.log_error('**** ShareBees Error occured: %s' % e)
-        raise
-    finally:
-        dialog.close()
-
 
 def resolve_movreel(url):
 
@@ -414,7 +427,7 @@ def resolve_movreel(url):
         addon.log('Movreel - Requesting GET URL: %s' % url)
         html = net.http_GET(url).content
         
-        dialog.update(33)
+        dialog.update(50)
         
         #Check page for any error msgs
         if re.search('This server is in maintenance mode', html):
@@ -422,45 +435,21 @@ def resolve_movreel(url):
             raise Exception('File is currently unavailable on the host')
 
         #Set POST data values
-        op = re.search('<input type="hidden" name="op" value="(.+?)">', html).group(1)
-        postid = re.search('<input type="hidden" name="id" value="(.+?)">', html).group(1)
-        method_free = re.search('<input type="(submit|hidden)" name="method_free" (style=".*?" )*value="(.*?)">', html).group(3)
-        method_premium = re.search('<input type="(hidden|submit)" name="method_premium" (style=".*?" )*value="(.*?)">', html).group(3)
+        data = {}
+        r = re.findall('type="hidden" name="(.+?)" value="(.+?)">', html)
+        if r:
+            for name, value in r:
+                data[name] = value
         
-        if method_free:
-            usr_login = ''
-            fname = re.search('<input type="hidden" name="fname" value="(.+?)">', html).group(1)
-            data = {'op': op, 'usr_login': usr_login, 'id': postid, 'referer': url, 'fname': fname, 'method_free': method_free}
+        wait_time = re.search('<span id="countdown_str">Wait <span id=".+?">(.+?)</span> seconds</span>', html)
+        if wait_time:
+            addon.log('Wait time found: %s' % wait_time.group(1))
+            xbmc.sleep(int(wait_time.group(1)) * 1000)
         else:
-            rand = re.search('<input type="hidden" name="rand" value="(.+?)">', html).group(1)
-            data = {'op': op, 'id': postid, 'referer': url, 'rand': rand, 'method_premium': method_premium}
+            xbmc.sleep(2000)        
         
         addon.log('Movreel - Requesting POST URL: %s DATA: %s' % (url, data))
         html = net.http_POST(url, data).content
-
-        #Only do next post if Free account, skip to last page for download link if Premium
-        if method_free:
-            #Check for download limit error msg
-            if re.search('<p class="err">.+?</p>', html):
-                addon.log_error('***** Download limit reached')
-                errortxt = re.search('<p class="err">(.+?)</p>', html).group(1)
-                raise Exception(errortxt)
-    
-            dialog.update(66)
-            
-            #Set POST data values
-            data = {}
-            r = re.findall(r'type="hidden" name="(.+?)" value="(.+?)">', html)
-    
-            if r:
-                for name, value in r:
-                    data[name] = value
-            else:
-                addon.log_error('***** Movreel - Cannot find data values')
-                raise Exception('Unable to resolve Movreel Link')
-
-            addon.log('Movreel - Requesting POST URL: %s DATA: %s' % (url, data))
-            html = net.http_POST(url, data).content
 
         #Get download link
         dialog.update(100)
@@ -468,254 +457,10 @@ def resolve_movreel(url):
         if link:
             return link.group(1)
         else:
-        	  raise Exception("Unable to find final link")
+            raise Exception("Unable to find final link")
 
     except Exception, e:
         addon.log_error('**** Movreel Error occured: %s' % e)
-        raise
-    finally:
-        dialog.close()
-
-
-def resolve_billionuploads(url):
-
-    try:
-
-        #Show dialog box so user knows something is happening
-        dialog = xbmcgui.DialogProgress()
-        dialog.create('Resolving', 'Resolving BillionUploads Link...')       
-        dialog.update(0)
-        
-        addon.log('BillionUploads - Requesting GET URL: %s' % url)
-        cookie_file = os.path.join(cookie_path,'billionuploads.lwp')
-        
-        cj = cookielib.LWPCookieJar()
-        if os.path.exists(cookie_file):
-            try: cj.load(cookie_file,True)
-            except: cj.save(cookie_file,True)
-        else: cj.save(cookie_file,True)
-        
-        normal = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-        headers = [
-            ('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0'),
-            ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
-            ('Accept-Language', 'en-US,en;q=0.5'),
-            ('Accept-Encoding', ''),
-            ('DNT', '1'),
-            ('Connection', 'keep-alive'),
-            ('Pragma', 'no-cache'),
-            ('Cache-Control', 'no-cache')
-        ]
-        normal.addheaders = headers
-        class NoRedirection(urllib2.HTTPErrorProcessor):
-            # Stop Urllib2 from bypassing the 503 page.
-            def http_response(self, request, response):
-                code, msg, hdrs = response.code, response.msg, response.info()
-                return response
-            https_response = http_response
-        opener = urllib2.build_opener(NoRedirection, urllib2.HTTPCookieProcessor(cj))
-        opener.addheaders = normal.addheaders
-        response = opener.open(url).read()
-        decoded = re.search('(?i)var z="";var b="([^"]+?)"', response)
-        if decoded:
-            decoded = decoded.group(1)
-            z = []
-            for i in range(len(decoded)/2):
-                z.append(int(decoded[i*2:i*2+2],16))
-            decoded = ''.join(map(unichr, z))
-            incapurl = re.search('(?i)"GET","(/_Incapsula_Resource[^"]+?)"', decoded)
-            if incapurl:
-                incapurl = 'http://billionuploads.com'+incapurl.group(1)
-                opener.open(incapurl)
-                cj.save(cookie_file,True)
-                response = opener.open(url).read()
-                
-        captcha = re.search('(?i)<iframe src="(/_Incapsula_Resource[^"]+?)"', response)
-        if captcha:
-            captcha = 'http://billionuploads.com'+captcha.group(1)
-            opener.addheaders.append(('Referer', url))
-            response = opener.open(captcha).read()
-            formurl = 'http://billionuploads.com'+re.search('(?i)<form action="(/_Incapsula_Resource[^"]+?)"', response).group(1)
-            resource = re.search('(?i)src=" (/_Incapsula_Resource[^"]+?)"', response)
-            if resource:
-                import random
-                resourceurl = 'http://billionuploads.com'+resource.group(1) + str(random.random())
-                opener.open(resourceurl)
-            recaptcha = re.search('(?i)<script type="text/javascript" src="(https://www.google.com/recaptcha/api[^"]+?)"', response)
-            if recaptcha:
-                response = opener.open(recaptcha.group(1)).read()
-                challenge = re.search('''(?i)challenge : '([^']+?)',''', response)
-                if challenge:
-                    challenge = challenge.group(1)
-                    captchaimg = 'https://www.google.com/recaptcha/api/image?c=' + challenge
-                    img = xbmcgui.ControlImage(450,15,400,130,captchaimg)
-                    wdlg = xbmcgui.WindowDialog()
-                    wdlg.addControl(img)
-                    wdlg.show()
-                    
-                    xbmc.sleep(3000)
-                    
-                    kb = xbmc.Keyboard('', 'Please enter the text in the image', False)
-                    kb.doModal()
-                    capcode = kb.getText()
-                    if (kb.isConfirmed()):
-                        userInput = kb.getText()
-                        if userInput != '': capcode = kb.getText()
-                        elif userInput == '':
-                            logerror('BillionUploads - Image-Text not entered')
-                            xbmc.executebuiltin("XBMC.Notification(Image-Text not entered.,BillionUploads,2000)")              
-                            return None
-                    else: return None
-                    wdlg.close()
-                    captchadata = {}
-                    captchadata['recaptcha_challenge_field'] = challenge
-                    captchadata['recaptcha_response_field'] = capcode
-                    opener.addheaders = headers
-                    opener.addheaders.append(('Referer', captcha))
-                    resultcaptcha = opener.open(formurl,urllib.urlencode(captchadata)).info()
-                    opener.addheaders = headers
-                    response = opener.open(url).read()
-                    
-        ga = re.search('(?i)"text/javascript" src="(/ga[^"]+?)"', response)
-        if ga:
-            jsurl = 'http://billionuploads.com'+ga.group(1)
-            p  = "p=%7B%22appName%22%3A%22Netscape%22%2C%22platform%22%3A%22Win32%22%2C%22cookies%22%3A1%2C%22syslang%22%3A%22en-US%22"
-            p += "%2C%22userlang%22%3A%22en-US%22%2C%22cpu%22%3A%22WindowsNT6.1%3BWOW64%22%2C%22productSub%22%3A%2220100101%22%7D"
-            opener.open(jsurl, p)
-            response = opener.open(url).read()
-#         pid = re.search('(?i)PID=([^"]+?)"', response)
-#         if pid:
-#             normal.addheaders += [('Cookie','D_UID='+pid.group(1)+';')]
-#             opener.addheaders = normal.addheaders
-        if re.search('(?i)url=/distil_r_drop.html', response) and filename:
-            url += '/' + filename
-            response = normal.open(url).read()
-        jschl=re.compile('name="jschl_vc" value="(.+?)"/>').findall(response)
-        if jschl:
-            jschl = jschl[0]    
-            maths=re.compile('value = (.+?);').findall(response)[0].replace('(','').replace(')','')
-            domain_url = re.compile('(https?://.+?/)').findall(url)[0]
-            domain = re.compile('https?://(.+?)/').findall(domain_url)[0]
-            final= normal.open(domain_url+'cdn-cgi/l/chk_jschl?jschl_vc=%s&jschl_answer=%s'%(jschl,eval(maths)+len(domain))).read()
-            html = normal.open(url).read()
-        else: html = response
-        
-        if dialog.iscanceled(): return None
-        dialog.update(25)
-        
-        #Check page for any error msgs
-        if re.search('This server is in maintenance mode', html):
-            addon.log_error('***** BillionUploads - Site reported maintenance mode')
-            raise Exception('File is currently unavailable on the host')
-
-        # Check for file not found
-        if re.search('File Not Found', html):
-            addon.log_error('***** BillionUploads - File Not Found')
-            raise Exception('File Not Found - Likely Deleted')  
-
-        data = {}
-        r = re.findall(r'type="hidden" name="(.+?)" value="(.*?)">', html)
-        for name, value in r: data[name] = value
-        
-        if dialog.iscanceled(): return None
-        
-        captchaimg = re.search('<img src="((?:http://|www\.)?BillionUploads.com/captchas/.+?)"', html)            
-        if captchaimg:
-
-            img = xbmcgui.ControlImage(550,15,240,100,captchaimg.group(1))
-            wdlg = xbmcgui.WindowDialog()
-            wdlg.addControl(img)
-            wdlg.show()
-            
-            kb = xbmc.Keyboard('', 'Please enter the text in the image', False)
-            kb.doModal()
-            capcode = kb.getText()
-            if (kb.isConfirmed()):
-                userInput = kb.getText()
-                if userInput != '': capcode = kb.getText()
-                elif userInput == '':
-                    showpopup('BillionUploads','[B]You must enter the text from the image to access video[/B]',5000, elogo)
-                    return None
-            else: return None
-            wdlg.close()
-            
-            data.update({'code':capcode})
-        
-        if dialog.iscanceled(): return None
-        dialog.update(50)
-        
-        data.update({'submit_btn':''})
-        enc_input = re.compile('decodeURIComponent\("(.+?)"\)').findall(html)
-        if enc_input:
-            dec_input = urllib2.unquote(enc_input[0])
-            r = re.findall(r'type="hidden" name="(.+?)" value="(.*?)">', dec_input)
-            for name, value in r:
-                data[name] = value
-        extradata = re.compile("append\(\$\(document.createElement\('input'\)\).attr\('type','hidden'\).attr\('name','(.*?)'\).val\((.*?)\)").findall(html)
-        if extradata:
-            for attr, val in extradata:
-                if 'source="self"' in val:
-                    val = re.compile('<textarea[^>]*?source="self"[^>]*?>([^<]*?)<').findall(html)[0]
-                data[attr] = val.strip("'")
-        r = re.findall("""'input\[name="([^"]+?)"\]'\)\.remove\(\)""", html)
-        
-        for name in r: del data[name]
-        
-        normal.addheaders.append(('Referer', url))
-        html = normal.open(url, urllib.urlencode(data)).read()
-        cj.save(cookie_file,True)
-        
-        if dialog.iscanceled(): return None
-        dialog.update(75)
-        
-        def custom_range(start, end, step):
-            while start <= end:
-                yield start
-                start += step
-
-        def checkwmv(e):
-            s = ""
-            i=[]
-            u=[[65,91],[97,123],[48,58],[43,44],[47,48]]
-            for z in range(0, len(u)):
-                for n in range(u[z][0],u[z][1]):
-                    i.append(chr(n))
-            t = {}
-            for n in range(0, 64): t[i[n]]=n
-            for n in custom_range(0, len(e), 72):
-                a=0
-                h=e[n:n+72]
-                c=0
-                for l in range(0, len(h)):            
-                    f = t.get(h[l], 'undefined')
-                    if f == 'undefined': continue
-                    a = (a<<6) + f
-                    c = c + 6
-                    while c >= 8:
-                        c = c - 8
-                        s = s + chr( (a >> c) % 256 )
-            return s
-
-        dll = re.compile('<input type="hidden" id="dl" value="(.+?)">').findall(html)
-        if dll:
-            dl = dll[0].split('GvaZu')[1]
-            dl = checkwmv(dl);
-            dl = checkwmv(dl);
-        else:
-            alt = re.compile('<source src="([^"]+?)"').findall(html)
-            if alt:
-                dl = alt[0]
-            else:
-                addon.log_error('***** BillionUploads - No Video File Found')
-                raise Exception('Unable to resolve - No Video File Found')  
-        
-        if dialog.iscanceled(): return None
-        dialog.update(100)                    
-
-        return dl
-        
-    except Exception, e:
-        addon.log_error('**** BillionUploads Error occured: %s' % e)
         raise
     finally:
         dialog.close()
@@ -790,101 +535,6 @@ def resolve_epicshare(url):
         dialog.close()
 
 
-def resolve_megarelease(url):
-
-    try:
-        
-        #Show dialog box so user knows something is happening
-        dialog = xbmcgui.DialogProgress()
-        dialog.create('Resolving', 'Resolving MegaRelease Link...')
-        dialog.update(0)
-        
-        addon.log('MegaRelease - Requesting GET URL: %s' % url)
-        html = net.http_GET(url).content
-
-        dialog.update(50)
-        
-        #Check page for any error msgs
-        if re.search('This server is in maintenance mode', html):
-            addon.log_error('***** MegaRelease - Site reported maintenance mode')
-            raise Exception('File is currently unavailable on the host')
-        if re.search('<b>File Not Found</b>', html):
-            addon.log_error('***** MegaRelease - File not found')
-            raise Exception('File has been deleted')
-
-        filename = re.search('You have requested <font color="red">(.+?)</font>', html).group(1)
-        filename = filename.split('/')[-1]
-        extension = re.search('(\.[^\.]*$)', filename).group(1)
-        guid = re.search('http://megarelease.org/(.+)$', url).group(1)
-        
-        vid_embed_url = 'http://megarelease.org/vidembed-%s%s' % (guid, extension)
-        
-        request = urllib2.Request(vid_embed_url)
-        request.add_header('User-Agent', USER_AGENT)
-        request.add_header('Accept', ACCEPT)
-        request.add_header('Referer', url)
-        response = urllib2.urlopen(request)
-        redirect_url = re.search('(http://.+?)video', response.geturl()).group(1)
-        download_link = redirect_url + filename
-        
-        dialog.update(100)
-
-        return download_link
-        
-    except Exception, e:
-        addon.log_error('**** MegaRelease Error occured: %s' % e)
-        raise
-    finally:
-        dialog.close()
-
-
-def resolve_lemupload(url):
-
-    try:
-        
-        #Show dialog box so user knows something is happening
-        dialog = xbmcgui.DialogProgress()
-        dialog.create('Resolving', 'Resolving LemUploads Link...')
-        dialog.update(0)
-        
-        addon.log('LemUploads - Requesting GET URL: %s' % url)
-        html = net.http_GET(url).content
-
-        dialog.update(50)
-        
-        #Check page for any error msgs
-        if re.search('This server is in maintenance mode', html):
-            addon.log_error('***** LemUploads - Site reported maintenance mode')
-            raise Exception('File is currently unavailable on the host')
-        if re.search('<b>File Not Found</b>', html):
-            addon.log_error('***** LemUpload - File not found')
-            raise Exception('File has been deleted')
-
-        filename = re.search('<h2>(.+?)</h2>', html).group(1)
-        extension = re.search('(\.[^\.]*$)', filename).group(1)
-        guid = re.search('http://lemuploads.com/(.+)$', url).group(1)
-        
-        vid_embed_url = 'http://lemuploads.com/vidembed-%s%s' % (guid, extension)
-        
-        request = urllib2.Request(vid_embed_url)
-        request.add_header('User-Agent', USER_AGENT)
-        request.add_header('Accept', ACCEPT)
-        request.add_header('Referer', url)
-        response = urllib2.urlopen(request)
-        redirect_url = re.search('(http://.+?)video', response.geturl()).group(1)
-        download_link = redirect_url + filename
-        
-        dialog.update(100)
-
-        return download_link
-        
-    except Exception, e:
-        addon.log_error('**** LemUploads Error occured: %s' % e)
-        raise
-    finally:
-        dialog.close()
-
-
 def resolve_hugefiles(url):
 
     try:
@@ -912,7 +562,7 @@ def resolve_hugefiles(url):
         
             #Set POST data values
             data = {}
-            r = re.findall(r'type="hidden" name="(.+?)" value="(.+?)">', html)
+            r = re.findall(r'type="hidden"\s+name="([^"]+)"\s+value="([^"]+)', html)
             
             if r:
                 for name, value in r:
@@ -924,7 +574,7 @@ def resolve_hugefiles(url):
             data['method_free'] = 'Free Download'
 
             #Handle captcha
-            data = handle_captchas(url, html, data, dialog)
+            data.update(handle_captchas(url, html, data, dialog))
             
             dialog.create('Resolving', 'Resolving HugeFiles Link...') 
             dialog.update(50)             
@@ -932,8 +582,8 @@ def resolve_hugefiles(url):
             addon.log('HugeFiles - Requesting POST URL: %s DATA: %s' % (url, data))
             html = net.http_POST(url, data).content
 
-            solvemedia = re.search('<iframe src="(http://api.solvemedia.com.+?)"', html)
-            recaptcha = re.search('<script type="text/javascript" src="(http://www.google.com.+?)">', html)
+            solvemedia = re.search('<iframe src="((?:http:)?//api.solvemedia.com[^"]+)', html)
+            recaptcha = re.search('<script type="text/javascript" src="(http://www.google.com[^"]+)', html)            
             numeric_captcha = re.compile("left:(\d+)px;padding-top:\d+px;'>&#(.+?);<").findall(html)   
 
             if solvemedia or recaptcha or numeric_captcha:
@@ -941,32 +591,11 @@ def resolve_hugefiles(url):
             else:
                 wrong_captcha = False
             
-        # issue one more time for download link
-        #Set POST data values
-        data = {}
-        r = re.findall(r'type="hidden" name="(.+?)" value="(.+?)">', html)
-        
-        if r:
-            for name, value in r:
-                data[name] = value
-        else:
-            common.addon.log('***** HugeFiles - Cannot find data values')
-            raise Exception('Unable to resolve HugeFiles Link')
-        data['method_free'] = 'Free Download'
-
-        # can't use t0mm0 net because the post doesn't return until the file is downloaded
-        request = urllib2.Request(url, urllib.urlencode(data))
-        response = urllib2.urlopen(request)
-
         #Get download link
-        dialog.update(100)
-        
-        stream_url = response.geturl()
-        
-        # assume that if the final url matches the original url that the process failed
-        if stream_url == url:
-            raise Exception('Unable to find stream url')
-        return stream_url        
+        dialog.update(100)       
+        r = re.search('fileUrl\s*=\s*"([^"]+)', html)
+        if r:
+            return r.group(1)        
         
     except Exception, e:
         addon.log_error('**** HugeFiles Error occured: %s' % e)
@@ -1115,40 +744,60 @@ def resolve_donevideo(url):
         dialog.close()
 
 
-def resolve_pandaplanet(url):
+def SHARED2_HANDLER(url):
+
+    html = net.http_GET(url).content
+
+    #Check if a download limit msg is showing
+    if re.search('Your free download limit is over.', html):
+      wait_time = re.search('<span id="timeToWait">(.+?)</span>', html).group(1)
+      Notify('big','2Shared Download Limit Exceeded','You have reached your download limit', '', '', 'You must wait ' + wait_time + ' to try again' )
+      return None
+
+    #If no download limit msg lets grab link, must post to it first for download to activate
+    else:
+      d3fid = re.search('<input type="hidden" name="d3fid" value="(.+?)">', html).group(1)
+      d3link = re.search('<input type="hidden" name="d3link" value="(.+?)">', html).group(1)
+      data = {'d3fid': d3fid, 'd3link': d3link}
+      html = net.http_POST(url, data).content
+      return d3link
+      
+
+def resolve_tusfiles(url):
 
     try:
         
         #Show dialog box so user knows something is happening
         dialog = xbmcgui.DialogProgress()
-        dialog.create('Resolving', 'Resolving PandaPlanet Link...')
+        dialog.create('Resolving', 'Resolving TusFiles Link...')
         dialog.update(0)
         
-        addon.log('PandaPlanet - Requesting GET URL: %s' % url)
+        addon.log('TusFiles - Requesting GET URL: %s' % url)
         html = net.http_GET(url).content
 
         dialog.update(50)
         
         #Check page for any error msgs
         if re.search('This server is in maintenance mode', html):
-            addon.log_error('***** PandaPlanet - Site reported maintenance mode')
+            addon.log_error('***** TusFiles - Site reported maintenance mode')
             raise Exception('File is currently unavailable on the host')
         if re.search('<b>File Not Found</b>', html):
-            addon.log_error('***** LemUpload - File not found')
+            addon.log_error('***** TusFiles - File not found')
             raise Exception('File has been deleted')
 
-        filename = re.search('<td class="dofir" title="(.+?)" style="color:.+">(.+?)</td>', html).group(1)
+        filename = re.search('Start download<h1><span class="label label-default"><FONT COLOR="#ffffff">(.+?)</FONT>', html).group(1)
+        filename = filename.split('/')[-1]
         extension = re.search('(\.[^\.]*$)', filename).group(1)
-        guid = re.search('http://pandapla.net/(.+)$', url).group(1)
+        guid = re.search('http://tusfiles.net/(.+)$', url).group(1)
         
-        vid_embed_url = 'http://pandapla.net/vidembed-%s%s' % (guid, extension)
+        vid_embed_url = 'http://tusfiles.net/vidembed-%s%s' % (guid, extension)
         
         request = urllib2.Request(vid_embed_url)
         request.add_header('User-Agent', USER_AGENT)
         request.add_header('Accept', ACCEPT)
         request.add_header('Referer', url)
         response = urllib2.urlopen(request)
-        redirect_url = re.search('(http://.+?)video', response.geturl()).group(1)
+        redirect_url = re.search('(http[s]*://.+?)video', response.geturl()).group(1)
         download_link = redirect_url + filename
         
         dialog.update(100)
@@ -1156,91 +805,131 @@ def resolve_pandaplanet(url):
         return download_link
         
     except Exception, e:
-        addon.log_error('**** PandaPlanet Error occured: %s' % e)
+        addon.log_error('**** TusFiles Error occured: %s' % e)
         raise
     finally:
         dialog.close()
 
 
-def resolve_360gig(url):
+def resolve_xfileload(url):
 
     try:
 
         #Show dialog box so user knows something is happening
         dialog = xbmcgui.DialogProgress()
-        dialog.create('Resolving', 'Resolving 360Gig Link...')       
+        dialog.create('Resolving', 'Resolving XfileLoad Link...')       
         dialog.update(0)
         
-        addon.log('360Gig - Requesting GET URL: %s' % url)
+        addon.log('XfileLoad - Requesting GET URL: %s' % url)
         html = net.http_GET(url).content
-
-        #Check page for any error msgs
-        if re.search('<b>File Not Found</b><br><br>', html):
-            print '***** 360Gig - File Not Found'
-            raise Exception('File Not Found')
-    
-        data = {}
-        r = re.findall(r'type="hidden" name="(.+?)" value="(.+?)">', html)
-        
-        if r:
-          for name, value in r:
-              data[name] = value
-        else:
-            addon.log_error('***** 360Gig - Cannot find data values')
-            raise Exception('Unable to resolve 360Gig Link')
-        
-        data['method_free'] = 'STANDARD DOWNLOAD'
-        data['referer'] = url
-        
-        addon.log('360Gig - Requesting POST URL: %s' % url)
-        
-        html = net.http_POST(url, data).content
         
         dialog.update(50)
         
-        data = {}        
-        r = re.findall(r'type="hidden" name="(.+?)" value="(.+?)">', html)
-        
+        #Check page for any error msgs
+        if re.search('<li>The file was deleted by its owner', html):
+            addon.log_error('***** XfileLoad - File is deleted')
+            raise Exception('File has been deleted from the host')
+
+        #Set POST data values
+        data = {}
+        r = re.findall('type="(hidden|submit)" name="(.+?)" value="(.*?)">', html)
         if r:
-          for name, value in r:
-              data[name] = value
-        else:
-          addon.log_error('Could not resolve link')
-        
-        data['method_free'] = 'STANDARD DOWNLOAD'
-        data['referer'] = url
-        
-        addon.log('360Gig - Requesting POST URL: %s' % url)
-        
+            for none, name, value in r:
+                data[name] = value
+
+        addon.log('XfileLoad - Requesting POST URL: %s DATA: %s' % (url, data))                
         html = net.http_POST(url, data).content
 
         #Get download link
         dialog.update(100)
-        
-        sPattern = '''<div id="player_code">.*?<script type='text/javascript'>(eval.+?)</script>'''
-        r = re.search(sPattern, html, re.DOTALL + re.IGNORECASE)
-
-        if r:
-          sJavascript = r.group(1)
-          sUnpacked = jsunpack.unpack(sJavascript)
-          sUnpacked = sUnpacked.replace("\\","")
-                   
-        r = re.search("addVariable.+?'file','(.+?)'", sUnpacked)
-                
-        if r:
-            return r.group(1)
+        link = re.search('<a href="(.+?)" target=""><img src="http://xfileload.com/3ghdes/images/downdown.png" /></a>', html)
+        if link:
+            return link.group(1)
         else:
-            sPattern  = '<embed id="np_vid"type="video/divx"src="(.+?)'
-            sPattern += '"custommode='
+            raise Exception("Unable to find final link")
+
+    except Exception, e:
+        addon.log_error('**** XfileLoad Error occured: %s' % e)
+        raise
+    finally:
+        dialog.close()
+        
+
+def resolve_mightyupload(url):
+
+    try:
+
+        #Show dialog box so user knows something is happening
+        dialog = xbmcgui.DialogProgress()
+        dialog.create('Resolving', 'Resolving MightyUpload Link...')       
+        dialog.update(0)
+        
+        url = url.replace('/embed-', '/')
+        url = re.compile('//.+?/([\w]+)').findall(url)[0]
+        url = 'http://www.mightyupload.com/embed-%s.html' % url
+        
+        addon.log('MightyUpload - Requesting GET URL: %s' % url)
+        html = net.http_GET(url).content
+        dialog.update(100)    
+
+        link = re.compile("file *: *'(.+?)'").findall(html)
+        if len(link) > 0: 
+            return link[0] + '|User-Agent=%s' % (USER_AGENT)    
+                
+        result = re.compile('(eval.*?\)\)\))').findall(html)[-1]
+        if result:
+            sJavascript = result
+            sUnpacked = jsunpack.unpack(sJavascript)
+
+            r = re.search("'file','([^']+)'", sUnpacked.replace('\\', ''))
+            if not r:
+                r = re.search('"src"value="([^"]+)', sUnpacked.replace('\\', ''))
+                if not r:
+                    r = re.search('"src"[0-9]="(.+?)"/>', sUnpacked.replace('\\', ''))
+            if r:
+                return r.group(1) + '|User-Agent=%s' % (USER_AGENT)
+            else:
+                raise Exception("Unable to find final link")
+
+    except Exception, e:
+        addon.log_error('**** MightyUpload Error occured: %s' % e)
+        raise
+    finally:
+        dialog.close()
+
+
+def resolve_xvidstage(url):
+
+    try:
+        #Show dialog box so user knows something is happening
+        dialog = xbmcgui.DialogProgress()
+        dialog.create('Resolving', 'Resolving XvidStage Link...')       
+        dialog.update(0)
+        
+      
+        url = url.replace('/embed-', '/')
+        url = re.compile('//.+?/([\w]+)').findall(url)[0]
+        url = 'http://xvidstage.com/embed-%s.html' % url      
+
+        addon.log('XvidStage - Requesting GET URL: %s' % url)        
+        html = net.http_GET(url).content
+        dialog.update(100)
+        
+        result = re.compile('(eval.*?\)\)\))').findall(html)[-1]
+        if result:
+            sJavascript = result
+            sUnpacked = jsunpack.unpack(sJavascript)
+            sPattern = "'file','(.+?)'"
             r = re.search(sPattern, sUnpacked)
             if r:
                 return r.group(1)
             else:
-                addon.log_error('***** 360Gig - Cannot find final link')
-                raise Exception('Unable to resolve 360Gig Link')
+                raise Exception("Unable to find final link")
+        else:
+            raise Exception("Unable to find final link")                
 
     except Exception, e:
-        addon.log_error('**** 360Gig Error occured: %s' % e)
+        addon.log_error('**** XvidStage Error occured: %s' % e)
         raise
     finally:
         dialog.close()

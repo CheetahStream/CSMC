@@ -1,12 +1,23 @@
 <strings>
-    <!-- MENUS -->
+    <!-- GENERAL -->
+    <string id="30100">Icefilms Site URL</string>
     <string id="30103">Flatten TV Shows with single seasons</string>
-    <string id="30104">Flatten source type for single type videos</string>
     <string id="30106">Stack Multi-Part Sources</string>
-    <string id="30107">In TV A-Z display number of episodes per show</string>
     <string id="30108">Number of search results per page</string>
     <string id="30109">Hide Recently Added & Popularity tags in Movie and TV Show listings</string>
 
+    <!-- PLAYBACK -->
+    <string id="30505">Auto-Play</string>
+    <string id="30506">    Include HD Sources in Auto-Play</string>
+    <string id="30507">    Auto-Play Method</string>
+    <string id="30508">    Preferred Host #1</string>
+    <string id="30509">    Preferred Host #2</string>
+    <string id="30510">    Preferred Host #3</string>
+    <string id="30501">Auto-Watch Percentage</string>
+    <string id="30502">Default Play Action</string>
+    <string id="30503">Enable Video Seeking - Fast Forward & Rewind</string>
+    <string id="30504">    Buffer Delay (seconds)</string>
+    
     <!-- ACCOUNTS -->
     <string id="30250">Hide successful login notifications</string>
     <string id="30220">RealDebrid account</string>
@@ -15,9 +26,6 @@
     <string id="30217">Movreel account</string>
     <string id="30218">    Username</string>
     <string id="30219">    Password</string>    
-    <string id="30214">ShareBees account</string>
-    <string id="30215">    Username</string>
-    <string id="30216">    Password</string>    
 
     <!-- DOWNLOADS -->
     <string id="30300">Downloads folder:</string>
@@ -45,13 +53,6 @@
     <string id="30604">        Use Posters instead of Banners for TV Shows</string>
     <string id="30605">    Movie Fanart</string>
     <string id="30606">    TV Fanart</string>
-
-    <!-- Miscellaneous -->
-    <string id="30500">Icefilms Site URL</string>
-    <string id="30501">Auto-Watch Percentage</string>
-    <string id="30502">Default Play Action</string>
-    <string id="30503">Enable Video Seeking - Fast Forward & Rewind</string>
-    <string id="30504">    Buffer Delay (seconds)</string>
 
    <!-- Next Aired -->
    <string id="45004">Enable Next Aired</string>
