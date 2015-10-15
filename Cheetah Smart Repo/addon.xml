@@ -6,7 +6,7 @@
         <extension point="xbmc.addon.repository" name="CSRepoV0.1.0">
             <info compressed="false">https://cdn.rawgit.com/CheetahStream/XBMC/master/_repo/addons.xml</info>
             <checksum>https://cdn.rawgit.com/CheetahStream/XBMC/master/_repo/addons.xml.md5</checksum>
-            <datadir zip="true">https://github.com/CheetahStream/XBMC/tree/master/_repo/</datadir>
+            <datadir zip="true">https://cdn.rawgit.com/CheetahStream/XBMC/master/_repo/Index.html</datadir>
             <hashes>false</hashes>
         </extension>
         <extension point="xbmc.addon.metadata">
