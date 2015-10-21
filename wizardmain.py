@@ -10,14 +10,13 @@ except:
     try:    from t0mm0.common.net   import Net
     except: from t0mm0_common_net   import Net
 #Define common.addon
-addon_id='config.tvmc'; 
+addon_id='plugin.video.hubwizard'; 
 AddonTitle='CS Setup Wizard'; 
 # Global Stuff
 addon=Addon(addon_id,sys.argv); net=Net(); settings=xbmcaddon.Addon(id=addon_id); net.set_user_agent('Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'); 
 AddonIcon=settings.getAddonInfo('icon')
 AddonFanart=settings.getAddonInfo('fanart')
 AddonPath=settings.getAddonInfo('path')
-locAddonXML=xbmc.translatePath(os.path.join(AddonPath,'addon.xml'))
 # #
 def get_params():
         param=[]
@@ -68,10 +67,9 @@ def FileOpen(path,Default=''):
 def OPEN_URL(url): req=urllib2.Request(url); req.add_header('User-Agent','Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'); response=urllib2.urlopen(req); link=response.read(); response.close(); return link
 def xEB(t): xbmc.executebuiltin(t)
 def SuggestButton(msg): addon.show_ok_dialog(["By the looks of your operating system","we suggest clicking: ",""+msg],title="OS: "+sOS,is_error=False); 
-def FixTheXML(): FileSave(locAddonXML,FileOpen(locAddonXML).replace('<extension point="xbmc.service" library="service.py" start="startup" />',''))
+
 # HELPDIR
 def addHELPDir(name,url,mode,iconimage,fanart,description,filetype): u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)+"&description="+urllib.quote_plus(description)+"&filetype="+urllib.quote_plus(filetype); ok=True; liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage); liz.setInfo(type="Video",infoLabels={"title":name,"Plot":description}); liz.setProperty("Fanart_Image",fanart); ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False); return ok
-def addHELPDir2(name,name2,url,mode,iconimage,fanart,description,filetype): u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name2)+"&iconimage="+urllib.quote_plus(iconimage)+"&fanart="+urllib.quote_plus(fanart)+"&description="+urllib.quote_plus(description)+"&filetype="+urllib.quote_plus(filetype); ok=True; liz=xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=iconimage); liz.setInfo(type="Video",infoLabels={"title":name,"Plot":description}); liz.setProperty("Fanart_Image",fanart); ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False); return ok
 # Standard addDir
 def addDir(name,url,mode,thumb,labels,favtype):
 	contextMenuItems=[]; sitethumb=thumb; sitename=name
@@ -98,12 +96,3 @@ def AUTO_VIEW(content):
 			elif content=='list': doSetView('default-view')
 			else: doSetView('default-view')
 		else:   doSetView('default-view')
-def settg(t,d=''):
-	try: return settings.getSetting(t)
-	except: return d
-def setts(t,v=''): 
-	try: settings.setSetting(t,v)
-	except: pass
-def DoStopScript(e): xbmc.executebuiltin("StopScript(%s)"%str(e))
-def XBMC_UpdateLocalAddons(): 	xbmc.executebuiltin("XBMC.UpdateLocalAddons()")
-def DoA(a): xbmc.executebuiltin("Action(%s)" % a)
