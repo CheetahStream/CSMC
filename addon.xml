@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.hubwizard" version="1.1.9"
-	name="Config Wizard" provider-name="tvaddons.ag">
+	name="CS Setup Wizard" provider-name="Cheetah Stream">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0"/>
 		<import addon="script.module.addon.common" optional="true" />
@@ -14,7 +14,7 @@
 		<summary>Config Wizard</summary>
 		<description>Instantly configure your Kodi experience with all the best add-ons and goodies from the TVADDONS.AG community!  </description>
 		<platform>all</platform>
-		<forum>http://forums.tvaddons.ag/forums/106-CONFIG-WIZARD</forum>
-		<website>http://www.tvaddons.ag/</website>
+		<forum>http://forums.cheetahstream.com</forum>
+		<website>www.CheetahStream.com</website>
 	</extension>
 </addon>
