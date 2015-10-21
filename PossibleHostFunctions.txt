@@ -1,0 +1,552 @@
+import urllib,urllib2,re,xbmcplugin,xbmcgui,xbmc,xbmcaddon,os,sys,time,shutil
+import wizardmain as main
+addon=main.addon; net=main.net; settings=main.settings; 
+def MediaFire(url):
+    if url.startswith('mediafire://'): url=url.replace('mediafire://','http://www.mediafire.com/?')
+    if 'https://' in url.lower(): url=url.replace('https://','http://')
+    if ('http://www.mediafire.com/?' not in url) and ('http://www.mediafire.com/download/' not in url) and ('http://mediafire.com/?' not in url) and ('http://mediafire.com/download/' not in url): return url ## contain with current url if not a filedrive url.
+    try:
+        html=main.nolines(net.http_GET(url).content)
+        if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        r=re.search('kNO\s*=\s*"(\D+://.+?)";\s*output\s*=\s*"',html)
+        if r: 
+        	print urllib.unquote_plus(r.group(1)); 
+        	return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]'
+    except: return url+'#[error]'
+def FireDrive(url):
+    if url.startswith('firedrive://'): url=url.replace('firedrive://','http://www.firedrive.com/file/')
+    if ('http://m.firedrive.com/file/' not in url) and ('https://m.firedrive.com/file/' not in url) and ('http://www.firedrive.com/file/' not in url) and ('http://firedrive.com/file/' not in url) and ('https://www.firedrive.com/file/' not in url) and ('https://firedrive.com/file/' not in url): return url ## contain with current url if not a filedrive url.
+    #else:
+    try:
+        if 'https://' in url.lower(): url=url.replace('https://','http://')
+        html=net.http_GET(url).content
+        if ">This file doesn't exist, or has been removed.<" in html: return "[error]  This file doesn't exist, or has been removed."
+        elif ">File Does Not Exist | Firedrive<" in html: return "[error]  File Does Not Exist."
+        elif "404: This file might have been moved, replaced or deleted.<" in html: return "[error]  404: This file might have been moved, replaced or deleted."
+        #print html; 
+        data={}; r=re.findall(r'<input\s+type="\D+"\s+name="(.+?)"\s+value="(.+?)"\s*/>',html);
+        for name,value in r: data[name]=value
+        #print data; 
+        if len(data)==0: return '[error]  input data not found.'
+        html=net.http_POST(url,data,headers={'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:30.0) Gecko/20100101 Firefox/30.0','Referer': url,'Host': 'www.firedrive.com'}).content
+        #print html
+        r=re.search('<a\s+href="(.+?)"\s+target="_blank"\s+id=\'top_external_download\'\s+title=\'Download This File\'\s*>',html)
+        if r: 
+        	print urllib.unquote_plus(r.group(1)); 
+        	return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]'
+    except: return url+'#[error]'
+def ResolveOtherHosts(url):
+    try:
+        if url.startswith('host://'): 
+        	url=url.replace('host://','http://')
+        	try: 
+        		import urlresolver
+        		url=urlresolver.HostedMediaFile(url).resolve()
+        		return url
+        	except: return url+'#[error]'
+        else: return url
+    except: return url+'#[error]'
+def TheFile_dot_me(url):
+    if url.startswith('thefile://'): url=url.replace('thefile://','http://thefile.me/')
+    if 'https://' in url.lower(): url=url.replace('https://','http://')
+    if ('http://thefile.me/' not in url) and ('http://www.thefile.me/' not in url): return url ## contain with current url if not a filedrive url.
+    try:
+        headers={'Referer':url}
+        html=net.http_GET(url).content
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        r=re.search('<script\stype=(?:"|\')text/javascript(?:"|\')>(eval\(function\(p,a,c,k,e,[dr]\)(?!.+player_ads.+).+?)</script>',html,re.DOTALL)
+        if r:
+            js=jsunpack.unpack(r.group(1))
+            r=re.search("file:\'(.+?)\'",js.replace('\\',''))
+            if r: return r.group(1)
+        data={}; r=re.findall(r'type="hidden"\s*name="(.+?)"\s*value="(.*?)"',html)
+        for name,value in r: data[name]=value
+        data.update({'referer':url}); data.update({'method_free':'Free Download'}); data.update({'op':'download1'})
+        html=net.http_POST(url,data,headers=headers).content
+        data={}; r=re.findall(r'type="hidden"\s*name="(.+?)"\s*value="(.*?)"', html)
+        for name,value in r: data[name]=value
+        data.update({'referer':url}); data.update({'btn_download':'Create Download Link'}); data.update({'op':'download2'})
+        html=net.http_POST(url,data,headers=headers).content
+        r=re.search(r'<span>\s*<a\s+href="(.+?)".*</a>\s*</span>',html)
+        if r: return r.group(1)
+        else: return url+'#[error]'
+    except: return url+'#[error]'
+def CheckForHosts(url):
+    DefaultUrl=""+url
+    try:
+        #
+        if 'https://' in url.lower(): url=url.replace('https://','http://')
+        #print {'urlBFD':url}
+        url=FireDrive(url)
+        #print {'urlAFD':url}
+        url=MediaFire(url)
+        url=TheFile_dot_me(url)
+        #print {'urlAMF':url}
+        url=ResolveOtherHosts(url)
+        #print {'urlAUR':url}
+        return url
+    #except: return url+'#[error]'
+    except: return DefaultUrl+'#[error]'
+
+
+###
+        html=net.http_GET(url).content
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        data={}; r=re.findall(r'<input type="hidden"\s*name="(.+?)"\s*value="(.*?)"', html)
+        for name,value in r: data[name]=value
+        data['referer']=''; data['submit']='Click here to Continue'; data['method_free']=''; data['method_premium']=''; 
+        html=main.nolines(self.net.http_POST(url,data).content).replace('<br><br><br>','<br>\r\a<br>\n<br>')
+        r=re.search('<a href="(http\D*://.+?\.zip)">Download .+?\.zip</a>\s*</span',html)
+###
+
+
+def ZippyShare(url):
+    if url.startswith('zippyshare://'): url=url.replace('/id/','.zippyshare.com/v/').replace('zippyshare://','http://www')+'/file.html'
+    if 'https://' in url.lower(): url=url.replace('https://','http://')
+    if ('http://' not in url) and ('zippyshare.com/v/' not in url) and ('/file.html' not in url): return url
+    try:
+        html=main.nolines(net.http_GET(url).content)
+        if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        r=re.search('kNO\s*=\s*"(\D+://.+?)";\s*output\s*=\s*"',html)
+        if r: 
+        	print urllib.unquote_plus(r.group(1)); 
+        	return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]'
+    except: return url+'#[error]'
+def TheFile_dot_me(url):
+    if url.startswith('thefile://'): url=url.replace('thefile://','http://thefile.me/')
+    if 'https://' in url.lower(): url=url.replace('https://','http://')
+    if ('http://thefile.me/' not in url) and ('http://www.thefile.me/' not in url): return url ## contain with current url if not a filedrive url.
+    try:
+        headers={'Referer':url}
+        html=net.http_GET(url).content
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        r=re.search('<script\stype=(?:"|\')text/javascript(?:"|\')>(eval\(function\(p,a,c,k,e,[dr]\)(?!.+player_ads.+).+?)</script>',html,re.DOTALL)
+        if r:
+            js=jsunpack.unpack(r.group(1))
+            r=re.search("file:\'(.+?)\'",js.replace('\\',''))
+            if r: return r.group(1)
+        data={}; r=re.findall(r'type="hidden"\s*name="(.+?)"\s*value="(.*?)"',html)
+        for name,value in r: data[name]=value
+        data.update({'referer':url}); data.update({'method_free':'Free Download'}); data.update({'op':'download1'})
+        html=self.net.http_POST(url,data,headers=headers).content
+        data={}; r=re.findall(r'type="hidden"\s*name="(.+?)"\s*value="(.*?)"', html)
+        for name,value in r: data[name]=value
+        data.update({'referer':url}); data.update({'btn_download':'Create Download Link'}); data.update({'op':'download2'})
+        html=self.net.http_POST(url,data,headers=headers).content
+        r=re.search(r'<span>\s*<a\s+href="(.+?)".*</a>\s*</span>',html)
+        if r: return r.group(1)
+        else: return url+'#[error]'
+    except: return url+'#[error]'
+
+
+def TheFile_dot_me(url):
+    if url.startswith('thefile://'): url=url.replace('thefile://','http://thefile.me/')
+    if 'https://' in url.lower(): url=url.replace('https://','http://')
+    if ('http://thefile.me/' not in url) and ('http://www.thefile.me/' not in url): return url ## contain with current url if not a filedrive url.
+    try:
+        headers={'Referer':url}
+        html=net.http_GET(url).content
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        r=re.search('<script\stype=(?:"|\')text/javascript(?:"|\')>(eval\(function\(p,a,c,k,e,[dr]\)(?!.+player_ads.+).+?)</script>',html,re.DOTALL)
+        if r:
+            js=jsunpack.unpack(r.group(1))
+            r=re.search("file:\'(.+?)\'",js.replace('\\',''))
+            if r: return r.group(1)
+        data={}; r=re.findall(r'type="hidden"\s*name="(.+?)"\s*value="(.*?)"',html)
+        for name,value in r: data[name]=value
+        data.update({'referer':url}); data.update({'method_free':'Free Download'}); data.update({'op':'download1'})
+        html=net.http_POST(url,data,headers=headers).content
+        data={}; r=re.findall(r'type="hidden"\s*name="(.+?)"\s*value="(.*?)"', html)
+        for name,value in r: data[name]=value
+        data.update({'referer':url}); data.update({'btn_download':'Create Download Link'}); data.update({'op':'download2'})
+        html=net.http_POST(url,data,headers=headers).content
+        r=re.search(r'<span>\s*<a\s+href="(.+?)".*</a>\s*</span>',html)
+        if r: return r.group(1)
+        else: return url+'#[error]'
+    except: return url+'#[error]'
+def FileHoot(url):#has captchas
+        if url.startswith('filehoot://'): url=url.replace('filehoot://','http://filehoot.com/')+'.html'
+        if 'https://' in url.lower(): url=url.replace('https://','http://')
+        if ('http://filehoot.com/' not in url) and ('http://www.filehoot.com/' not in url): return url
+    #try:
+        html=net.http_GET(url).content
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        data={}; r=re.findall(r'<input type="hidden"\s*name="(.+?)"\s*value="(.*?)"', html)
+        for name,value in r: data[name]=value
+        data['referer']=''; data['plans_free_button_text']='Free Download'; data['method_free']='Free Download'; data['usr_login']=''; 
+        #html=main.nolines(net.http_POST(url,data).content).replace('<br><br><br>','<br>\r\a<br>\n<br>')
+        ###r=re.search('<a href="(http\D*://.+?\.zip)">Download .+?\.zip</a>\s*</span',html)
+        if r: 
+        	print urllib.unquote_plus(r.group(1)); 
+        	return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]r'
+    #except: return url+'#[error]exception'
+
+import urllib,urllib2,re,xbmcplugin,xbmcgui,xbmc,xbmcaddon,os,sys,time,shutil
+import wizardmain as main
+addon=main.addon; net=main.net; settings=main.settings; 
+def FireDrive(url):
+    if url.startswith('firedrive://'): url=url.replace('firedrive://','http://www.firedrive.com/file/')
+    if ('http://m.firedrive.com/file/' not in url) and ('https://m.firedrive.com/file/' not in url) and ('http://www.firedrive.com/file/' not in url) and ('http://firedrive.com/file/' not in url) and ('https://www.firedrive.com/file/' not in url) and ('https://firedrive.com/file/' not in url): return url
+    #else:
+    try:
+        html=net.http_GET(url).content
+        if ">This file doesn't exist, or has been removed.<" in html: return "[error]  This file doesn't exist, or has been removed."
+        elif ">File Does Not Exist | Firedrive<" in html: return "[error]  File Does Not Exist."
+        elif "404: This file might have been moved, replaced or deleted.<" in html: return "[error]  404: This file might have been moved, replaced or deleted."
+        #print html; 
+        data={}; r=re.findall(r'<input\s+type="\D+"\s+name="(.+?)"\s+value="(.+?)"\s*/>',html);
+        for name,value in r: data[name]=value
+        #print data; 
+        if len(data)==0: return '[error]  input data not found.'
+        html=net.http_POST(url,data,headers={'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:30.0) Gecko/20100101 Firefox/30.0','Referer': url,'Host': 'www.firedrive.com'}).content
+        #print html
+        r=re.search('<a\s+href="(.+?)"\s+target="_blank"\s+id=\'top_external_download\'\s+title=\'Download This File\'\s*>',html)
+        if r: return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]r'
+    except: return url+'#[error]exception'
+def ResolveOtherHosts(url):
+    try:
+        if url.startswith('host://'): 
+        	url=url.replace('host://','http://')
+        	try: 
+        		import urlresolver
+        		url=urlresolver.HostedMediaFile(url).resolve()
+        		return url
+        	except: return url+'#[error]urlresolver'
+        else: return url
+    except: return url+'#[error]exception'
+def MrFile_dot_me(url):
+    if url.startswith('mrfile://'): url=url.replace('mrfile://','http://mrfile.me/')
+    if ('http://mrfile.me/' not in url) and ('http://www.mrfile.me/' not in url): return url
+    try:
+        html=net.http_GET(url).content
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        data={}; r=re.findall(r'<input type="hidden"\s*name="(.+?)"\s*value="(.*?)"', html)
+        for name,value in r: data[name]=value
+        data['referer']=''; data['submit']='Click here to Continue'; data['method_free']=''; data['method_premium']=''; 
+        html=main.nolines(net.http_POST(url,data).content).replace('<br><br><br>','<br>\r\a<br>\n<br>')
+        r=re.search('<a href="(http\D*://.+?\.zip)">Download .+?\.zip</a>\s*</span',html)
+        if r: return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]r'
+    except: return url+'#[error]exception'
+def CheckForHosts(url):
+    #DefaultUrl=""+url
+    #try:
+        #
+        if 'https://' in url.lower(): url=url.replace('https://','http://')
+        #print {'urlBFD':url}
+        if url.startswith('host://'): url=ResolveOtherHosts(url)
+        else:
+            url=FireDrive(url)
+            #print {'urlAFD':url}
+            url=MrFile_dot_me(url)
+            #print {'urlAMF':url}
+            #url=FileHoot(url)
+            
+        print {'returning url':url}
+        return url
+    ##except: return url+'#[error]'
+    #except: return DefaultUrl+'#[error]'
+
+
+
+import urllib,urllib2,re,xbmcplugin,xbmcgui,xbmc,xbmcaddon,os,sys,time,shutil
+import wizardmain as main
+addon=main.addon; net=main.net; settings=main.settings; 
+def FireDrive(url):
+    if url.startswith('firedrive://'): url=url.replace('firedrive://','http://www.firedrive.com/file/')
+    if ('http://m.firedrive.com/file/' not in url) and ('https://m.firedrive.com/file/' not in url) and ('http://www.firedrive.com/file/' not in url) and ('http://firedrive.com/file/' not in url) and ('https://www.firedrive.com/file/' not in url) and ('https://firedrive.com/file/' not in url): return url
+    #else:
+    try:
+        html=net.http_GET(url).content
+        if ">This file doesn't exist, or has been removed.<" in html: return "[error]  This file doesn't exist, or has been removed."
+        elif ">File Does Not Exist | Firedrive<" in html: return "[error]  File Does Not Exist."
+        elif "404: This file might have been moved, replaced or deleted.<" in html: return "[error]  404: This file might have been moved, replaced or deleted."
+        #print html; 
+        data={}; r=re.findall(r'<input\s+type="\D+"\s+name="(.+?)"\s+value="(.+?)"\s*/>',html);
+        for name,value in r: data[name]=value
+        #print data; 
+        if len(data)==0: return '[error]  input data not found.'
+        html=net.http_POST(url,data,headers={'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:30.0) Gecko/20100101 Firefox/30.0','Referer': url,'Host': 'www.firedrive.com'}).content
+        #print html
+        r=re.search('<a\s+href="(.+?)"\s+target="_blank"\s+id=\'top_external_download\'\s+title=\'Download This File\'\s*>',html)
+        if r: return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]r'
+    except: return url+'#[error]exception'
+def ResolveOtherHosts(url):
+    try:
+        if url.startswith('host://'): 
+        	url=url.replace('host://','http://')
+        	try: 
+        		import urlresolver
+        		url=urlresolver.HostedMediaFile(url).resolve()
+        		return url
+        	except: return url+'#[error]urlresolver'
+        else: return url
+    except: return url+'#[error]exception'
+def MrFile_dot_me(url):
+    if url.startswith('mrfile://'): url=url.replace('mrfile://','http://mrfile.me/')
+    if ('http://mrfile.me/' not in url) and ('http://www.mrfile.me/' not in url): return url
+    try:
+        html=net.http_GET(url).content
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        data={}; r=re.findall(r'<input type="hidden"\s*name="(.+?)"\s*value="(.*?)"',html)
+        for name,value in r: data[name]=value
+        data['referer']=''; data['submit']='Click here to Continue'; data['method_free']=''; data['method_premium']=''; 
+        html=main.nolines(net.http_POST(url,data).content).replace('<br><br><br>','<br>\r\a<br>\n<br>')
+        r=re.search('<a href="(http\D*://.+?\.zip)">Download .+?\.zip</a>\s*</span',html)
+        if r: return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]r'
+    except: return url+'#[error]exception'
+def CheckForHosts(url):
+    DefaultUrl=""+url
+    try:
+        if 'https://' in url.lower(): url=url.replace('https://','http://')
+        print {'incoming url':url}
+        if url.startswith('host://'): url=ResolveOtherHosts(url)
+        else:
+            url=FireDrive(url)
+            url=MrFile_dot_me(url)
+        print {'returning url':url}
+        return url
+    except: return DefaultUrl+'#[error]'
+
+
+
+import urllib,urllib2,re,xbmcplugin,xbmcgui,xbmc,xbmcaddon,os,sys,time,shutil
+import wizardmain as main
+addon=main.addon; net=main.net; settings=main.settings; 
+UA='Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:30.0) Gecko/20100101 Firefox/30.0'
+def FireDrive(url):
+    if url.startswith('firedrive://'): url=url.replace('firedrive://','http://www.firedrive.com/file/')
+    if ('http://m.firedrive.com/file/' not in url) and ('https://m.firedrive.com/file/' not in url) and ('http://www.firedrive.com/file/' not in url) and ('http://firedrive.com/file/' not in url) and ('https://www.firedrive.com/file/' not in url) and ('https://firedrive.com/file/' not in url): return url
+    #else:
+    try:
+        html=net.http_GET(url).content
+        if ">This file doesn't exist, or has been removed.<" in html: return "[error]  This file doesn't exist, or has been removed."
+        elif ">File Does Not Exist | Firedrive<" in html: return "[error]  File Does Not Exist."
+        elif "404: This file might have been moved, replaced or deleted.<" in html: return "[error]  404: This file might have been moved, replaced or deleted."
+        #print html; 
+        data={}; r=re.findall(r'<input\s+type="\D+"\s+name="(.+?)"\s+value="(.+?)"\s*/>',html);
+        for name,value in r: data[name]=value
+        #print data; 
+        if len(data)==0: return '[error]  input data not found.'
+        html=net.http_POST(url,data,headers={'User-Agent':UA,'Referer':url,'Host':'www.firedrive.com'}).content
+        #print html
+        r=re.search('<a\s+href="(.+?)"\s+target="_blank"\s+id=\'top_external_download\'\s+title=\'Download This File\'\s*>',html)
+        if r: return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]r'
+    except: return url+'#[error]exception'
+def ResolveOtherHosts(url):
+    try:
+        if url.startswith('host://'): 
+        	url=url.replace('host://','http://')
+        	try: 
+        		import urlresolver
+        		url=urlresolver.HostedMediaFile(url).resolve()
+        		return url
+        	except: return url+'#[error]urlresolver'
+        else: return url
+    except: return url+'#[error]exception'
+def MrFile_dot_me(url):
+    if url.startswith('mrfile://'): url=url.replace('mrfile://','http://mrfile.me/')
+    if ('http://mrfile.me/' not in url) and ('http://www.mrfile.me/' not in url): return url
+    try:
+        html=net.http_GET(url).content
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        data={}; r=re.findall(r'<input type="hidden"\s*name="(.+?)"\s*value="(.*?)"',html)
+        for name,value in r: data[name]=value
+        data['referer']=''; data['submit']='Click here to Continue'; data['method_free']=''; data['method_premium']=''; 
+        html=main.nolines(net.http_POST(url,data).content).replace('<br><br><br>','<br>\r\a<br>\n<br>')
+        r=re.search('<a href="(http\D*://.+?\.zip)">Download .+?\.zip</a>\s*</span',html)
+        if r: return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]r'
+    except: return url+'#[error]exception'
+def PromptFile(url):
+        if url.startswith('promptfile://'): url=url.replace('promptfile://','http://www.promptfile.com/l/')
+        if ('http://promptfile.com/l/' not in url) and ('http://www.promptfile.com/l/' not in url): return url
+    #try:
+        html=main.nolines(net.http_GET(url,headers={'User-Agent':UA}).content).replace('/>','/\n\r>').replace('</div>','</div\n\r>')
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        print html
+        r=re.search('<a href="(http\D*://.+?)" class="green_btn download_btn">\s*Download File\s*</a',html)
+        if r: print {'r':r}; pass
+        else:
+            data={}; r=re.findall(r'<input type="hidden" name="(chash)" value="(.*?)"',html)
+            for name,value in r: data[name]=value
+            print ['data',data]
+            html=main.nolines(net.http_POST(url,data,headers={'User-Agent':UA,'Referer':url}).content).replace('</div>','</div\n\r>')
+            print html
+            if '" class="green_btn download_btn">Download File</a' in html: r=re.search('<a href="(http\D*://.+?)" class="green_btn download_btn">Download File</a',html)
+            elif '<button type="submit" class="gray_btn">Continue to File</button>' in html:
+                data={}; r=re.findall(r'<input type="hidden" name="(chash)" value="(.*?)"',html)
+                for name,value in r: data[name]=value
+                print ['data',data]
+                html=main.nolines(net.http_POST(url,data,headers={'User-Agent':UA,'Referer':url}).content).replace('</div>','</div\n\r>')
+                print html
+                if '" class="green_btn download_btn">Download File</a' in html: r=re.search('<a href="(http\D*://.+?)" class="green_btn download_btn">Download File</a',html)
+                else: return url+'#[error]regexB'
+            else: return url+'#[error]regexA'
+        if r: return urllib.unquote_plus(r.group(1))
+        else: return url+'#[error]r'
+    #except: return url+'#[error]exception'
+def CheckForHosts(url):
+    DefaultUrl=""+url
+    try:
+        if 'https://' in url.lower(): url=url.replace('https://','http://')
+        print {'incoming url':url}
+        if url.startswith('host://'): url=ResolveOtherHosts(url)
+        else:
+            url=FireDrive(url)
+            url=MrFile_dot_me(url)
+            url=PromptFile(url)
+        print {'returning url':url}
+        return url
+    except: return DefaultUrl+'#[error]'
+
+
+
+def ChillingSafe(url):
+    if url.startswith('chillingsafe://'): url=url.replace('chillingsafe://','http://chillingsafe.com/')
+    if ('http://chillingsafe.com/' not in url) and ('http://www.chillingsafe.com/' not in url): return url
+    try:
+        html=net.http_GET(url,headers={'User-Agent':UA}).content
+        xbmc.sleep(8000)
+        #html=net.http_GET(url+'?d=1',headers={'User-Agent':UA,'Referer':url}).content
+        if not url.endswith('?d=1'): url+='?d=1'
+        return url
+    except: return url+'#[error]exception'
+
+
+
+if url.startswith('googlecode://'): url.replace('googlecode://','http://xbmchub.googlecode.com/svn/'); return url
+
+
+
+
+def Kiwi6(url):
+        if url.startswith('kiwi6://'): url=url.replace('kiwi6://','http://kiwi6.com/file/')
+        if ('http://www.kiwi6.com/file/' not in url) and ('http://kiwi6.com/file/' not in url): return url
+    #try:
+        html=main.nolines(net.http_GET(url,headers={'User-Agent':UA}).content).replace('/>','/\n\r>').replace('</div>','</div\n\r>').replace('</script>','</script\n\r>')
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        #r=re.search('if\s*\(autostart\)\s*\{\s*window.location="(http\D*://[A-Za-z0-9]+.kiwi6.com/download/[A-Za-z0-9]+)";\s*\}',html)
+        r=re.search('<label>Direct Hotlink:</label>\s*<input class="link-url" value="(http\D*://[A-Za-z0-9]+.kiwi6.com/hotlink/[A-Za-z0-9]+/.+?)"',html)
+        if r: xbmc.sleep(2000); return r.group(1)
+        else: return url+'#[error]r'
+    #except: return url+'#[error]exception'
+
+
+
+
+def Kiwi6(url):
+        if url.startswith('kiwi6://'): url=url.replace('kiwi6://','http://kiwi6.com/file/')
+        if ('http://www.kiwi6.com/file/' not in url) and ('http://kiwi6.com/file/' not in url): return url
+    #try:
+        html=main.nolines(net.http_GET(url,headers={'User-Agent':UA}).content).replace('/>','/\n\r>').replace('</div>','</div\n\r>').replace('</script>','</script\n\r>')
+        #if '<h3 class="error_msg_title">Invalid or Deleted File.</h3>' in html: return "[error]  This file doesn't exist, or has been removed."
+        #r=re.search('if\s*\(autostart\)\s*\{\s*window.location="(http\D*://[A-Za-z0-9]+.kiwi6.com/download/[A-Za-z0-9]+)";\s*\}',html)
+        r=re.search('<label>Direct Hotlink:</label>\s*<input class="link-url" value="(http\D*://[A-Za-z0-9]+.kiwi6.com/hotlink/[A-Za-z0-9]+/.+?)"',html)
+        if r: xbmc.sleep(2000); return r.group(1)
+        else: return url+'#[error]r'
+    #except: return url+'#[error]exception'
+
+
+
+
+if url.startswith('mediafire://'): url.replace('mediafire://','http://www.mediafire.com/?'); print {'returning url':url}; return url
+
+
+
+name="WARNING"
+url="http://fusion.tvaddons.ag/xpert-advanced/tools/wizard.txt"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/warning.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="MAC"
+url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/mac.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="WINDOWS"
+url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/windows.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="FIRETV"
+url="http://www.mediafire.com/download/11u2w9rjq47ic4s/XBMC_firetv.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/firetv.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="OUYA"
+url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/ouya.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="ANDROID"
+url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/android.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="iDEVICES"
+url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/idevices.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="ATV"
+url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/atv2.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="MATRICOM"
+url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/matricom.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="PIVOS"
+url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/pivos.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="LINUX"
+url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/linux.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings and does not yet function with OpenELEC devices!"
+type="main"
+
