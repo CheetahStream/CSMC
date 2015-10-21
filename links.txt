@@ -1,45 +1,5 @@
-name="Addon Installer"
-url="http://fusion.tvaddons.ag/start-here/plugin.program.addoninstaller-1.2.0.zip"
-img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/windows.jpg"
-fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
-description="Configure Kodi with all the Best Goodies Available in Just One Click!
-WARNING: This tool will overwrite your current settings!"
-type="addon"
-
-name="Testing PromptFile"
-url="promptfile://3787EB0430-316A8A3C68"
-img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/windows.jpg"
-fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
-description="Configure Kodi with all the Best Goodies Available in Just One Click!
-WARNING: This tool will overwrite your current settings!"
-type="main"
-
-name="Testing MrFile"
-url="mrfile://i5unznadz3dd"
-img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/windows.jpg"
-fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
-description="Configure Kodi with all the Best Goodies Available in Just One Click!
-WARNING: This tool will overwrite your current settings!"
-type="main"
-
-name="Testing MediaFire Windows"
-url="http://www.mediafire.com/?rwzvlz9v1na2hs2"
-img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/windows.jpg"
-fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
-description="Configure Kodi with all the Best Goodies Available in Just One Click!
-WARNING: This tool will overwrite your current settings!"
-type="main"
-
-name="Testing MediaFire AFtv"
-url="http://www.mediafire.com/download/11u2w9rjq47ic4s/XBMC_firetv.zip"
-img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/windows.jpg"
-fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
-description="Configure Kodi with all the Best Goodies Available in Just One Click!
-WARNING: This tool will overwrite your current settings!"
-type="main"
-
 name="WARNING"
-url="http://fusion.tvaddons.ag/xpert-advanced/tools/wizard.txt"
+url="http://tribeca.tvaddons.ag/tools/wizard/warning.txt"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/warning.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
@@ -47,7 +7,7 @@ WARNING: This tool will overwrite your current settings!"
 type="splash"
 
 name="MAC"
-url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/mac.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
@@ -55,15 +15,23 @@ WARNING: This tool will overwrite your current settings!"
 type="main"
 
 name="WINDOWS"
-url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/windows.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
 WARNING: This tool will overwrite your current settings!"
 type="main"
 
+name="ANDROID"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/android.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
 name="FIRETV"
-url="http://www.mediafire.com/download/11u2w9rjq47ic4s/XBMC_firetv.zip"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/firetv.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
@@ -71,23 +39,15 @@ WARNING: This tool will overwrite your current settings!"
 type="main"
 
 name="OUYA"
-url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/ouya.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
 WARNING: This tool will overwrite your current settings!"
 type="main"
 
-name="ANDROID"
-url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
-img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/android.jpg"
-fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
-description="Configure Kodi with all the Best Goodies Available in Just One Click!
-WARNING: This tool will overwrite your current settings!"
-type="main"
-
 name="iDEVICES"
-url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/idevices.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
@@ -95,7 +55,7 @@ WARNING: This tool will overwrite your current settings!"
 type="main"
 
 name="ATV"
-url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/atv2.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
@@ -103,23 +63,23 @@ WARNING: This tool will overwrite your current settings!"
 type="main"
 
 name="MATRICOM"
-url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/matricom.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
 WARNING: This tool will overwrite your current settings!"
 type="main"
 
-name="PIVOS"
-url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
-img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/pivos.jpg"
+name="MYGICA"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/mygica.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
 WARNING: This tool will overwrite your current settings!"
 type="main"
 
 name="LINUX"
-url="http://www.mediafire.com/download/rwzvlz9v1na2hs2/XBMC.zip"
+url="http://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/linux.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
