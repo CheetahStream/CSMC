@@ -23,7 +23,7 @@ WARNING: This tool will overwrite your current settings!"
 type="main"
 
 name="ANDROID"
-url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/freeport.zip"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/updates.zip"
 img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/android.jpg"
 fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
 description="Configure Kodi with all the Best Goodies Available in Just One Click!
