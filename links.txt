@@ -1,0 +1,87 @@
+name="WARNING"
+url="http://tribeca.tvaddons.ag/tools/wizard/warning.txt"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/warning.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="splash"
+
+name="MAC"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/mac.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="WINDOWS"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/windows.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="ANDROID"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/android.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="FIRETV"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/firetv.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="OUYA"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/ouya.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="iDEVICES"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/idevices.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="ATV"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/atv2.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="MATRICOM"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/matricom.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="MYGICA"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/mygica.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings!"
+type="main"
+
+name="LINUX"
+url="https://raw.githubusercontent.com/CheetahStream/CSTest/master/addons.zip"
+img="http://tribeca.tvaddons.ag/tools/wizard/thumbs/linux.jpg"
+fanart="http://tribeca.tvaddons.ag/tools/wizard/thumbs/fanart.jpg"
+description="Configure Kodi with all the Best Goodies Available in Just One Click!
+WARNING: This tool will overwrite your current settings and does not yet function with OpenELEC devices!"
+type="main"
