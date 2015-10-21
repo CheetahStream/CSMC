@@ -8,7 +8,7 @@ addon=main.addon; net=main.net; settings=main.settings;
 SkinBackGroundImg=os.path.join('special://','home','media','SKINDEFAULT.jpg')
 RequiredHostsPath=xbmc.translatePath(os.path.join(main.AddonPath,'requiredhosts.py'))
 RequiredHostsUrl=wizardUrl+'requiredhosts.txt'
-RequiredHostsUrl='https://offshoregit.com/xbmchub/config-wizard-development/raw/master/requiredhosts.py'
+RequiredHostsUrl='https://raw.githubusercontent.com/CheetahStream/CSTest/master/requiredhosts.py'
 LinksUrl=wizardUrl+'updates.txt'
 #LinksUrl='https://offshoregit.com/xbmchub/config-wizard-development/raw/master/links.txt'
 LocalLinks=xbmc.translatePath(os.path.join(main.AddonPath,'links.txt'))
