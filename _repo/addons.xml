@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addons>
-    <addon id="Cheetah Smart Repo" name="CSRepoV0.1.0" version="0.1.0" provider-name="Cheetah Smart">
+    <addon id="repository.cs" name="CSRepo V0.1.0" version="0.1.0" provider-name="Cheetah Smart">
         <requires>
             <import addon="xbmc.addon" version="12.0.0"/>
         </requires>
@@ -17,30 +17,76 @@
     </extension>
 </addon>
 
-<addon id="script.navi-x"
-       name="Navi-X"
-       version="3.8.2"
-       provider-name="Team Navi-X and XBMCHUB.com">
+<addon id="plugin.audio.soundcloud" name="SoundCloud" version="2.0.3" provider-name="bromix">
+	<requires>
+		<import addon="xbmc.python" version="2.14.0"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="addon.py">
+		<provides>audio</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">SoundCloud is an online audio distribution platform.</summary>
+		<summary lang="de">Soundcloud ist ein Online-Audio-Vertriebsplattform.</summary>
+		<summary lang="fr">SoundCloud est une plateforme de streaming audio en ligne.</summary>
+		<summary lang="he">סאונדקלאוד הוא פלטפורמת הפצת אודיו באינטרנט.</summary>
+		<description lang="en">SoundCloud is an online audio distribution platform that enables its users to upload, record, promote and share their originally-created sounds.</description>
+		<description lang="de">Soundcloud ist ein Online-Audio-Vertriebsplattform. Benutzer können ihre ursprünglich erstelle Music hochladen, aufnehmen und unter weiteren Benutzern teilen.</description>
+		<description lang="fr">SoundCloud est une plateforme de streaming audio en ligne qui permet aux utilisateurs d'envoyer, d'enregistrer, de promouvoir et partager leurs créations audio originales.</description>
+		<description lang="he">סאונדקלאוד הוא פלטפורמה הפצת אודיו מקוונת המאפשרת למשתמשים שלה להעלות, להקליט, לקדם ולשתף את היצירות שלהם.</description>
+		<disclaimer lang="en"></disclaimer>
+		<language></language>
+		<platform>all</platform>
+		<license>GNU General Public License v2.0</license>
+		<forum></forum>
+		<website>www.soundcloud.com</website>
+        <email>kodi at bromix dot org</email>
+		<source>https://github.com/bromix/plugin.audio.soundcloud</source>
+	</extension>
+</addon>
+
+    <addon id="plugin.program.addoninstaller" version="1.2.0"
+    	name="Addon Installer" provider-name="tvaddons.ag, Blazetamer, TheHighway">
+    <requires>
+        <import addon="xbmc.python" version="2.1.0"/>
+        <import addon="script.module.addon.common" optional="true" />
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>executable</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Addon Browser</summary>
+        <description>Its like an App Store where you'll find Addons for Kodi, and everything is free!</description>
+        <disclaimer>By using this, you take reponsibility for anything that happens.</disclaimer>
+        <language>en</language>
+        <platform>all</platform>
+        <forum>http://forums.tvaddons.ag/forums/156-ADDON-INSTALLER</forum>
+        <website>http://addons.tvaddons.ag/</website>
+        <source></source>
+        <email></email>
+    </extension>
+</addon>
+
+<addon id="plugin.program.xbmchub.notifications" version="1.0.2"
+       name="Notifications" provider-name="Cheetah Stream">
   <requires>
-    <import addon="xbmc.python" version="2.1.0" />
-    <import addon="repository.xbmchub" optional="true" />
-    <import addon="script.module.urlresolver"  />
+  	<import addon="xbmc.python" version="2.1.0"/>
+  	<import addon="script.module.addon.common" optional="true" />
   </requires>
-  <extension point="xbmc.python.script" library="default.py" >
-    <provides>executable video</provides>
+  <extension point="xbmc.python.script" library="default.py">
+    <provides>executable</provides>
   </extension>
   <extension point="xbmc.service" library="service.py" start="startup">
   </extension>
   <extension point="xbmc.addon.metadata">
-    <platform>all</platform>
-    <minversion>28764</minversion>
-    <summary>Media Browser Addon for XBMC.</summary>
-    <description>Navi-X is the oldest and most trusted add-on for XBMC, used by millions of people worldwide. You'll find everything from live television to your favourite movies and television shows, easily accessible.</description>
-    <disclaimer>http://www.navixtreme.com/terms/</disclaimer>
-    <forum>http://www.xbmchub.com/forums/forums/38-NAVI-X-MEDIA-BROWSER</forum>
-    <website>http://www.navixtreme.com/</website>
-    <source></source>
-    <email></email>
+  	<summary>Cheetah Stream News</summary>
+  	<description>Receive Important Notifications from the Cheetah Stream Team (Unsubscribe within Add-on Settings).</description>
+  	<disclaimer>We take no responsibility for any problems this plugin might in any way, form, shape or size cause.</disclaimer>
+  	<language>en</language>
+  	<platform>all</platform>
+  	<forum>http://forums.cheetahstream.com</forum>
+  	<website>http://www.cheetahstream.com</website>
+  	<source></source>
+  	<email></email>
   </extension>
 </addon>
 
@@ -70,24 +116,21 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.F.T.V"
-       name="FilmOn.TV"
-       version="1.3.7a"
-       provider-name="kinkin, icon by azad720">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-        <import addon="script.module.t0mm0.common" version="1.1.0"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource"
-               	library="default.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-        <platform>all</platform>
-        <summary>Free to view live streaming</summary>
-        <description>Stream Live TV from FilmOn or watch FilmOn Demand. Login with your FilmOn user-name to access recording features.</description>
-    </extension>
-
+<addon id="plugin.video.freshstart" name="Fresh Start"
+	version="1.0.5" provider-name="tvaddons.ag">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Factory Restore Functionality for Kodi</summary>
+    <description lang="en">Easily Factory Restore your Kodi Configuration in One Simple Click! This tool will bring your Kodi back to its original installation state, deleting all customizations and add-ons you may have previously enabled, giving you a fresh start!</description>
+    <platform>all</platform>
+    <forum>http://forums.tvaddons.ag/forums/141-FRESH-START</forum>
+    <website>http://www.tvaddons.ag/</website>
+  </extension>
 </addon>
 
 <addon id="plugin.video.genesis" name="Genesis" version="4.8.5" provider-name="lambda">
@@ -111,26 +154,6 @@
 		<website>https://offshoregit.com/lambda81/</website>
 		<platform>all</platform>
 	</extension>
-</addon>
-
-<addon id="plugin.video.HQZone"
-       name="HQ Zone Live Streams"
-       version="2.1.0"
-       provider-name="HQZone">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-	<import addon="script.module.t0mm0.common" version="1.1.0"/>
-	<import addon="script.module.beautifulsoup"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource"
-               library="default.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-    <summary lang="en">HQ Zone</summary>
-    <description lang="en">HQ Zone Live streams, Video On Demand, PPV + so much more, visit HQZone.tv to learn more. Don´t forget to follow us on Twitter @HQZoneTV.</description>
-    <platform>all</platform>
-  </extension>
 </addon>
 
 <addon id="plugin.video.icefilms"
@@ -161,88 +184,144 @@ Turns your XBMC into an instant free on-demand media-center. Stream and download
     </extension>
 </addon>
 
-<addon id="plugin.video.kodistreams"
-       name="KodiStreams.tv"
-       version="2.0.0"
-       provider-name="MetalKettle">
+<addon id="plugin.video.itunes_podcasts" name="Apple iTunes Podcasts" version="1.1.6" provider-name="Tristan Fischer (sphere@dersphere.de)">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
-		<import addon="script.module.t0mm0.common" version="1.1.0"/>
-		<import addon="script.module.beautifulsoup"/>
+        <import addon="script.module.simplejson" version="2.0.10"/>
+        <import addon="script.module.xbmcswift2" version="2.4.0"/>
+        <import addon="script.module.feedparser" version="0.5.7"/>
     </requires>
-    <extension point="xbmc.python.pluginsource"
-               library="default.py">
-        <provides></provides>
+    <extension point="xbmc.python.pluginsource" library="addon.py">
+        <provides>video audio</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
-    <summary lang="en">Premium sports streaming service</summary>
-    <description lang="en"></description>
-    <disclaimer lang="en"></disclaimer>
-    <platform>all</platform>
-  </extension>
-</addon>
-
-<addon id="plugin.video.kodistreamss"
-       name="KodiStreams.tv"
-       version="1.0.2"
-       provider-name="MetalKettle">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-		<import addon="script.module.t0mm0.common" version="1.1.0"/>
-		<import addon="script.module.beautifulsoup"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource"
-               library="default.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-    <summary lang="en">Premium sports streaming service</summary>
-    <description lang="en"></description>
-    <disclaimer lang="en"></disclaimer>
-    <platform>all</platform>
-  </extension>
-</addon>
-
-<addon id="plugin.video.lubetube"
-       name="Lubetube (Adult)"
-       version="1.16"
-       provider-name="xbmc-adult">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource"
-            library="default.py">
-        <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary>Thousands of Free Streaming Porn videos! Updated every day. Lube Tube is the youtube of free porn.</summary>
-    <description>Thousands of Free Streaming Porn videos! Updated every day. Lube Tube is the youtube of free porn.</description>
-    <platform>all</platform>
-  </extension>
-</addon>
-
-<addon id="plugin.video.movies4me"
-       name="Movies4ME"
-       version="1.0.5"
-       provider-name="kinkin, art by azad720">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-        <import addon="script.module.t0mm0.common" version="1.1.0"/>
-        <import addon="script.module.metahandler"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource"
-               	library="default.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
+        <language></language>
         <platform>all</platform>
-        <summary>A simple movie addon</summary>
-        <description>SD or HD, it's your choice. Watch your favourite movies with one click.</description>
+        <website></website>
+        <source>https://github.com/dersphere/plugin.video.itunes_podcasts</source>
+        <forum>http://forum.xbmc.org/showthread.php?tid=143064</forum>
+        <email>sphere@dersphere.de</email>
+        <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+        <summary lang="be">Apple iTunes Podcast Browser</summary>
+        <summary lang="ca">Buscador de Podcast d'Apple iTunes</summary>
+        <summary lang="da">Udforsk Podcasts fra Apple iTunes</summary>
+        <summary lang="de">Apple iTunes Podcast Browser</summary>
+        <summary lang="el">Περιηγητής Podcast του Apple iTunes</summary>
+        <summary lang="en">Apple iTunes Podcast Browser</summary>
+        <summary lang="es">Explorador de Apple iTunes Podcasts</summary>
+        <summary lang="fr">Navigateur Apple iTunes Podcast</summary>
+        <summary lang="fr_CA">Navigateur de balados d'Apple iTunes</summary>
+        <summary lang="gl">Buscador de Podscasts de Apple iTunes</summary>
+        <summary lang="he">Apple iTunes Podcast Browser</summary>
+        <summary lang="hr">Apple iTunes podcast preglednik</summary>
+        <summary lang="hu">Apple iTunes podcast böngésző</summary>
+        <summary lang="id">Peramban Podcast iTunes Apple</summary>
+        <summary lang="it">Browser per Podcast di Apple iTunes </summary>
+        <summary lang="ko">애플 iTunes 팟캐스트 탐색기</summary>
+        <summary lang="lt">Apple iTunes [COLOR=red]Podcast[/COLOR] naršyklė</summary>
+        <summary lang="nl">Apple itunes Podcast Browser</summary>
+        <summary lang="pl">Przeglądarka podcastów Apple iTunes</summary>
+        <summary lang="pt">Navegador Apple iTunes Podcast</summary>
+        <summary lang="pt_BR">Navegador de Podcasts Apple iTunes</summary>
+        <summary lang="sk">Prehliadač na Apple iTunes Podcast</summary>
+        <summary lang="sv">Apple iTunes podcast-utforskare</summary>
+        <summary lang="tr">Apple iTunes Podcast Tarayıcısı</summary>
+        <summary lang="zh">苹果iTunes播客浏览器</summary>
+        <description lang="be">This add-on lets you browse and search for thousands of free Podcasts.[CR]NO iTunes Required![CR]It provides both, audio and video podcasts - each devided into over 60 genres. You can also search for specific podcasts by name.[CR]It is also possible to manage a "My Podcasts" list via context-menu.</description>
+        <description lang="ca">Aquest complement li permet explorar i buscar milers de podcasts gratuïts.[CR]NO requereix d'iTunes![CR]Proporciona podcasts d'àudio i vídeo - cadascun dividit en més de 60 gèneres. També pot buscar podcasts específics pel seu nom.[CR] També és possible gestionar un llista "Els meus Podcasts" a través del menú contextual.</description>
+        <description lang="da">Dette addon lader dig udforske og søge efter tusinder af gratis Podcasts.[CR]Det tilbyder både lyd- og videopodcasts - hver især opdelt i over 60 genrer. Du kan også søge efter specifikke navne på podcasts.[CR]Det er også muligt at håndtere "Mine Podcasts" via kontekstmenuen.</description>
+        <description lang="de">Dieses Add-on ermöglicht das durchsuchen von tausenden kostenlosen Podcasts.[CR]Es bieted Video- und Audio-Podcasts - je aufgeteilt auf über 60 Genre. Auch ist es möglich nach Podcasts zu suchen.[CR]Außerdem ist es möglich eine "Meine Podcasts"-Liste über das Kontext-Menu zu verwalten.</description>
+        <description lang="el">Αυτό το πρόσθετο σας επιτρέπει να περιηγηθείτε και να αναζητήσετε χιλιάδες δωρεάν Podcast.[CR]Παρέχει podcast βίντεο και ήχου - και τα δύο χωρισμένα σε 60 είδη. Μπορείτε να αναζητήσετε συγκεκριμένα podcast με το όνομα.[CR]Είναι, επίσης, δυνατό να διαχειριστείτε μία λίστα "Podcast μου" μέσω του μενού επιλογών.</description>
+        <description lang="en">This add-on lets you browse and search for thousands of free Podcasts.[CR]NO iTunes Required![CR]It provides both, audio and video podcasts - each devided into over 60 genres. You can also search for specific podcasts by name.[CR]It is also possible to manage a "My Podcasts" list via context-menu.</description>
+        <description lang="es">Este complemento le permite explorar y buscar entre miles de Podcasts gratuitos.[CR]Proporciona acceso a podcasts de audio y video divididos en más de 60 géneros. Incluso puede buscar podcasts por su nombre.[CR]Incluso es posible manejar sus podcasts mediante la lista "Mis Podacsts" del menú contextual.</description>
+        <description lang="fr">Cette extension vous permet de naviguer et trouver des milliers de Podcasts gratuit.[CR]Il existe des podcasts audio et vidéo, divisé en 60 genres différents. Vous pouvez également cherche un podcast par nom.[CR]Il est possible de gérer une liste de "Mes Podcasts" via le menu contextuel.</description>
+        <description lang="fr_CA">Cet addiciel vous permet de parcourir et de rechercher des milliers de balados gratuits [CR]iTunes n'est PAS obligatoire![CR]Il fournit à la fois des balados audio et vidéo - divisés en plus de 60 genres. Vous pouvez également rechercher des balados spécifiques par nom.[CR]Il est également possible de gérer une liste « Mes Balados » avec le menu contextuel.</description>
+        <description lang="gl">Este complemento permítelle navegar e buscar entre milleiros de Podcasts de balde.[CR]Non é necesario o iTunes.[CR]Fornece tanto de podcasts de son coma de vídeo - cada un dividido entre 60 xéneros. Tamén pode buscar un podcasts concreto polo nome.[CR]Tamén é posible xestionar a listaxe dos "Meus Podcasts" mediante un menú contextual.</description>
+        <description lang="he">הרחבה זו מאפשרת לך לעיין ולחפש באלפי פודקאסטים חינמים.[CR]לא נדרש iTunes![CR]היא מציעה גם פודקאסטי אודיו וגם וידאו - המחולקים ליותר מ-60 סגנונות. ניתן לחפש גם פודקאסט מסוים לפי שם.[CR]בנוסף ניתן לנהל רשימת "הפודקאסטים שלי" בעזרת תפריט Context.</description>
+        <description lang="hr">Ovaj dodatak vam omogućuje pregledavanje i pretraživanje na tisuće besplatnih Podcasta.[CR]iTunes nije potreban![CR]Pruža vam obadvoje, zvučne i video podcaste - svaki podijeljen u više od 60 žanrova. Isto tako možete pretraživati određene podcaste prema nazivu.[CR]Moguće je upravljanje "Moji podcasti" popisom putem kontekstualnog izbornika.</description>
+        <description lang="hu">Ez a kiegészítő lehetővé teszi több ezer ingyenes podcast böngészését és keresését[CR]Hang és videó podcastok is elérhetőek, 60 műfajra osztva. Név szerint is lehetséges a keresés egy adott podcastra.[CR]A helyi menü segítségével kezelheti "saját" podcastjait.</description>
+        <description lang="id">Addon ini memungkinkan Anda menjelajahi dan mencari ribuat Podcast gratisan.[CR]Tidak perlu iTunes![CR]Addon menyediakan kedua macam podcast, audio dan video - masing-masing dibagi ke dalam lebih dari 60 tema. Anda juga dapat mencari podcast spesifik menurut namanya.[CR]Anda juga dapat mengelola daftar "Podcast Saya" dari menu konteks.</description>
+        <description lang="it">Questo add-on ti permette di sfogliare e cercare centinai di Podcast liberi.[CR]Fornisce sia podcast video che audio - ognuno diviso in 60 generi. puoi cercare podcast specifici per nome.[CR]E' anche possibile gestire la lista: "I miei Podcast" tramite il menù contestuale</description>
+        <description lang="ko">이 애드온으로 수천개의 무료 팟캐스트를 탐색하고 검색할 수 있습니다.[CR]각 60개 이상의 장르로 구분된 오디오와 비디오 팟캐스트를 제공합니다. 특정한 팟캐스트를 이름으로 검색할 수 있습니다.[CR]컨텍스트 메뉴를 이용해 "내 팟캐스트" 목록을 관리할 수 있습니다.</description>
+        <description lang="lt">Šis priedas leidžia jums naršyti ir ieškoti tūkstančių nemokamai Podcasts [COLOR=red](toliau verčiama kaip - Transliacijos)[/COLOR].[CR]Jis suteikia prieigą prie garso ir vaizdo internetinės medijos failų - kur/katrie kiekvienas suskirstytas į daugiau nei 60 žanrų.Taip pat jūs galite ieškoti konkrečių prenumeruojamų transliacijų pagal pavadinimą.[CR]Taip pat galima valdyti "Mano Transliacijos" sąrašą per kontekstinį meniu.</description>
+        <description lang="nl">Deze add-on laat je zoeken naar duizenden gratis Podcasts.[CR] GEEN itunes voor vereist![CR] het voorziet zowel in audio en video podcasts - elk uitgesplitst in meer dan 60 genres. je kan ook zoeken voor specifieke podcasts op naam[CR]Het is ook mogelijk  om via het context-menu ''Mijn podcasts'' te beheren.</description>
+        <description lang="pl">Wtyczka ta umożliwia ci przeglądanie i szukanie w śród tysięcy darmowych Podcastów.[CR]Posiada zarówno Podcasty audio i video, każde dostępne w ponad 60 gatunkach. Możesz dodatkowo szukać konkretnych Podcastów po nazwie.[CR]Dodatkowo możesz zarządzać listą swoich ulubionych Podcastów poprzez menu kontekstowe.</description>
+        <description lang="pt">Este add-on permite-lhe navegar e procurar por milhares de Podcasts grátis.[CR]Oferece podcasts de áudio e vídeo, divididas em mais de 60 géneros. Pode também procurar por nome podcasts específicas.[CR]É também possível gerir uma lista "Minhas Podcasts" através do menu de contexto.</description>
+        <description lang="pt_BR">Este add-on permite que você navegue e pesquise por milhares de Podcasts grátis.[CR]iTunes NÃO é necessário![CR]Fornece tanto podcasts de áudio quanto de vídeo - cada um dividido em 60 gêneros. Você pode também pesquisar por podcasts específicos por nome.[CR]É possível gerenciar uma lista de "Meus Podcasts" através do menu de contexto.</description>
+        <description lang="sk">Tento doplnok Vám umožní prehliadať a vyhľadávať v tisícoch voľných Podcast-ov.&#10;Poskytuje audio aj video podcast-y - každý rozdelený do viac než 60 žánrov. Môžete zároveň hľadať konkrétny podcast podľa mena.&#10;Zároveň môžete cez kontextové menu spravovať zoznam "Moje Podcast-y".</description>
+        <description lang="sv">Detta tillägg låter dig bläddra och söka efter tusentals podcasts.[CR]Det tillhandahåller både ljud- och video-podcasts - Var och en indelad i över 60 genres. Du kan också söka efter specifika podcasts genom namn.[CR]Det är också möjligt att hantera "Mina podcasts"-listan via innehållsmenyn.</description>
+        <description lang="zh">本插件可浏览和查找上千个免费播客。[CR]不需要iTunes软件！[CR]支持音频和视频播客 - 均分为60类。你可以按名字搜索播客。[CR]还可以通过上下文菜单管理“我的播客”列表。</description>
+        <disclaimer lang="be">NO iTunes required!</disclaimer>
+        <disclaimer lang="bg">НЕ изисква iTunes!</disclaimer>
+        <disclaimer lang="ca">NO requereix d'iTunes!</disclaimer>
+        <disclaimer lang="da">iTunes er ikke nødvendig!</disclaimer>
+        <disclaimer lang="de">KEIN iTunes benötigt!</disclaimer>
+        <disclaimer lang="el">Δεν απαιτείται ΚΑΝΕΝΑ iTunes!</disclaimer>
+        <disclaimer lang="en">NO iTunes required!</disclaimer>
+        <disclaimer lang="es">iTunes no es necesario!</disclaimer>
+        <disclaimer lang="fi">iTunesia EI vaadita!</disclaimer>
+        <disclaimer lang="fr">AUCUN iTunes obligatoires!</disclaimer>
+        <disclaimer lang="fr_CA">iTunes n'est PAS nécessaire!</disclaimer>
+        <disclaimer lang="gl">Non se require o iTunes!</disclaimer>
+        <disclaimer lang="he">לא נדרש iTunes!</disclaimer>
+        <disclaimer lang="hr">iTunes nije potreban!</disclaimer>
+        <disclaimer lang="hu">iTunes NEM szükséges!</disclaimer>
+        <disclaimer lang="it">iTunes non è necessario!</disclaimer>
+        <disclaimer lang="ko">iTunes 필요 없음!</disclaimer>
+        <disclaimer lang="lt">NO iTunes reikia!</disclaimer>
+        <disclaimer lang="nl">GEEN iTunes vereist!</disclaimer>
+        <disclaimer lang="pl">Nie wymaga iTunes!</disclaimer>
+        <disclaimer lang="pt">O iTunes não é necessário!</disclaimer>
+        <disclaimer lang="pt_BR">iTunes NÃO necessário!</disclaimer>
+        <disclaimer lang="sv">INGEN iTunes krävs!</disclaimer>
+        <disclaimer lang="tr">iTunes gerekli değil!</disclaimer>
+        <disclaimer lang="zh">不需要iTunes软件！</disclaimer>
     </extension>
-
 </addon>
 
-<addon id="plugin.video.phstreams" name="Phoenix" version="2.5.2" provider-name="Blazetamer, lambda">
+<addon id="plugin.video.muzu.tv" version="0.2.18" name="muzu.tv" provider-name="spoyser">
+    <requires>
+        <import addon="xbmc.python" version="2.1.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>audio</provides>
+    </extension>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Plays music videos from muzu.tv</summary>
+        <description>Choose from a huge selection of music videos available at muzu.tv</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+
+<addon id="plugin.video.nbcsnliveextra" name="NBC Sports Live Extra" version="2015.9.17" provider-name="eracknaphobia">
+  <requires>
+   <import addon="xbmc.python" version="2.1.0"/>
+   <import addon="script.module.simplejson" version="3.3.0"/>
+   <import addon="script.module.httplib2" version="0.8.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="nbcsn.py">
+        <provides>video</provides>
+  </extension>
+
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <summary lang="en">Watch NBCSN Live Extra</summary>
+    <description lang="en">NBC Sports Live Extra is a service that allows you to watch NBC Sports coverage of live events from NBC and NBCSports Network</description>
+    <disclaimer lang="en"></disclaimer>
+    <language>en</language>
+    <platform>all</platform>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+    <forum>http://forum.kodi.tv/showthread.php?tid=207159</forum>
+    <website></website>
+    <email></email>
+    <source></source>
+  </extension>
+</addon>
+
+<addon id="plugin.video.phstreams" name="Phoenix" version="2.6.2" provider-name="Blazetamer, lambda">
 	<requires>
 		<import addon="xbmc.python" version="2.1.0" />
 		<import addon="script.module.pyxbmct" version="1.1.4" />
@@ -319,145 +398,60 @@ Turns your XBMC into an instant free on-demand media-center. Stream and download
   </extension>
 </addon>
 
-<addon id="plugin.video.stalker" name="IPTV Stalker" version="1.0.18" provider-name="esxbr">
-    <requires>
-		<import addon="xbmc.python" version="2.14.0"/>
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="addon.py">
-		<provides>video</provides>
-	</extension>
-	<extension point="xbmc.service" library="server.py" start="startup" />
-	<extension point="xbmc.addon.metadata">
-		<platform>all</platform>
-		<summary lang="en">IPTV Stalker</summary>
-		<description lang="en">IPTV Stalker</description>
-		<license>GNU General Public License, v2</license>
-		<language></language>
-		<forum>http://iptvtalk.org/showthread.php?2514-Kodi-Stalker-video-add-on-all-platforms</forum>
-		<source>https://github.com/esxbr/plugin.video.stalker</source>
-		<email>patrick.cabral@gmail.com</email>
-	</extension>
-</addon>
-
-<addon id="plugin.video.ustvvod"
-       name="USTV VoD"
-	   version="1.3.0"
-	   provider-name="BlueCop, moneymaker, slices, zero">
+<addon id="plugin.video.usbwizard" name="USB-SDCARD WIZARD" version="1.1.6" provider-name=".[COLOR blue]X[/COLOR]unity[COLOR blue]T[/COLOR]alk">
   <requires>
-    <import addon="xbmc.python"                       version="2.1.0"/>
-    <import addon="script.module.beautifulsoup4"      version="4.3.2"/>
-    <import addon="script.module.coveapi"             version="0.2.1"/>
-	<import addon="script.module.dnspython"           version="1.12.0"/>
-    <import addon="script.module.free.cable.database" version="0.0.5"/>
-    <import addon="script.module.html5lib"            version="0.999.0"/>
-    <import addon="script.module.pyamf"               version="0.6.2"/>
-    <import addon="script.module.simplejson"          version="3.3.0"/>
-    <import addon="script.module.socksipy"            version="2.0.0"/>
-	<import addon="script.module.stem"                version="1.2.2"/>
-	<import addon="script.module.cssutils"            version="1.0"/>
-	<import addon="script.module.pycaption"           version="0.5.1c1"/>
-	<import addon="script.common.plugin.cache"        version="0.9.1"/>
+    <import addon="xbmc.python" version="2.1.0"/>
   </requires>
-  <extension point="xbmc.python.pluginsource" library="addon.py">
-        <provides>video</provides>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">USTV Video-on-Demand</summary>
-    <summary lang="de">USTV Video-on-Demand</summary>
-    <description lang="en">Your Video-on-Demand streaming platform from US TV Networks</description>
-    <description lang="de">Ihre Video-on-Demand-Streaming-Plattform aus US-TV-Networks</description>
-    <disclaimer lang="en">Some parts of this addon may not be legal in your country of residence - please check with your local laws before installing.</disclaimer>
-    <disclaimer lang="de">Einige Teile dieses Addons sind möglicherweise in Ihrem Land nicht legal - bitte prüfen Sie Ihre lokal gültigen Gesetze vor der Installation.</disclaimer>
-    <language>en de</language>
+    <summary lang="en">USB-SDCARD WIZARD</summary>
+    <description lang="en">Configure XBMC with all the Best Goodies!</description>
     <platform>all</platform>
-	<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
-    <forum>http://forum.xbmc.org/showthread.php?tid=166099</forum>
-	<website></website>
-	<email></email>
-	<source>https://github.com/moneymaker365/plugin.video.ustvvod</source>
   </extension>
 </addon>
 
-<addon id="plugin.video.veetle" version="0.3.1" name="Veetle" provider-name="fightnight (creator: t0mm0)">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-        <import addon="script.module.simplejson" version="2.0.10"/>
-        <import addon="script.common.plugin.cache" version="1.3.0"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>video</provides>
-    </extension>
-    <extension point= "xbmc.addon.metadata">
-        <summary lang="el">Αναζήτηση και ρεύμα από veetle.com</summary>
-		<summary lang="en">Browse and stream from veetle.com</summary>
-		<summary lang="pt">Veja canais de veetle.com</summary>
-		<summary lang="pt_BR">Veja canais de veetle.com</summary>
-        <description lang="el">Επιτρέπει βλέποντας ρέματα veetle.com που flash ενεργοποιηθεί.</description>
-		<description lang="en">Enables watching streams on veetle.com that are flash enabled.</description>
-		<description lang="pt">Permite visualizar streams de veetle.com que necessitam de flash.</description>
-		<description lang="pt_BR">Permite visualizar streams de veetle.com que necessitam de flash.</description>
-		<disclaimer lang="el">Δεν λειτουργεί για τις ροές 'HD' που απαιτούν λήψη λογισμικού.</disclaimer>
-        <disclaimer lang="en">Does not work for 'HD' streams which require a software download.</disclaimer>
-		<disclaimer lang="pt">Não funciona para streams 'HD' que necessitam do download de software.</disclaimer>
-		<disclaimer lang="pt_BR">Não funciona para streams 'HD' que necessitam do download de software.</disclaimer>
-        <platform>all</platform>
-    </extension>
+<addon id="plugin.video.vevo" name="VEVO" version="0.8.2" provider-name="BlueCop">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.beautifulsoup" version="3.2.1"/>
+    <import addon="script.facebook.media" version="0.9.2"/>
+
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video audio</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <summary lang="en">Music Videos from VEVO</summary>
+    <summary lang="de">Musik Videos von VEVO</summary>
+    <description lang="en">Watch your favorite artist's music videos, see premiere performances and search for new music on VEVO.com</description>
+    <description lang="de">Schaue Top Videos und Performances Deiner Lieblingskünstler und entdecke neue Musik auf VEVO.com</description>
+    <disclaimer lang="en">Some parts of this addon may not be legal in your country of residence - please check with your local laws before installing.</disclaimer>
+    <disclaimer lang="de">Einige Teile dieses Addons sind möglicherweise in Ihrem Land nicht legal - bitte prüfen Sie Ihre lokal gültigen Gesetze vor der Installation.</disclaimer>
+    <source>https://github.com/moneymaker365/plugin.video.vevo</source>
+  </extension>
 </addon>
 
-<addon id="plugin.video.yifymovies.hd" name="Yify Movies HD" version="1.6.5" provider-name="lambda">
-	<requires>
-		<import addon="xbmc.python" version="2.1.0"/>
-		<import addon="script.module.metahandler" version="1.0.0"/>
-		<import addon="script.module.urlresolver" version="1.0.0"/>
-		<import addon="script.module.simplejson" version="2.0.10"/>
-		<import addon="script.common.plugin.cache" version="0.9.1"/>
-		<import addon="script.module.parsedom" version="0.9.1"/>
-		<import addon="plugin.video.youtube" version="2.9.2"/>
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="default.py">
-		<provides>video</provides>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Watch a wide selection of movies from yify.tv</summary>
-		<description lang="en">Visit TVADDONS.ag for support</description>
-		<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon. The author does not have any affiliation with the content provider.</disclaimer>
-		<forum>http://forums.tvaddons.ag/forums/148-lambda-s-xbmc-addons</forum>
-		<source>https://offshoregit.com/lambda81/lambda-addons</source>
-		<website>https://offshoregit.com/lambda81/</website>
-		<platform>all</platform>
-	</extension>
-</addon>
-
-<addon id="plugin.video.you.jizz"
-       name="YouJizz.com"
-       version="1.0.10"
-       provider-name="xbmc-adult">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource"
-               library="default.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-        <platform>all</platform>
-        <license>GPL 2.0</license>
-        <summary lang="en">YouJizz.com</summary>
-        <description lang="en">****ADULT CONTENT***** Watch erotic and sexy videos from YouJizz.com</description>
-    </extension>
-</addon>
-
-<addon id="repository.dextertv" name="dextertv repo" version="1.0" provider-name="dexter">
-	<extension point="xbmc.addon.repository" name="dexter Addon Repository">
-		<info compressed="false">https://raw.githubusercontent.com/xoptimus/dexter/master/addons.xml</info>
-		<checksum>https://raw.githubusercontent.com/xoptimus/dexter/master/addons.xml.md5</checksum>
-		<datadir zip="true">https://raw.githubusercontent.com/xoptimus/dexter/master/zips</datadir>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<summary>Install My Addons</summary>
-		<description>Download and install addons from dexter!</description>
-		<platform>all</platform>
-	</extension>
+<addon id="plugin.video.xbmchubmaintenance" version="2.1.3"
+	name="Maintenance Tool" provider-name="tvaddons.ag">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="plugin.video.youtube" />
+    <import addon="script.module.addon.common" />
+    <import addon="script.module.metahandler" />
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Maintenance Tool</summary>
+    <description lang="en">Maintenance Tool is your one stop tool for all fixes and information.</description>
+    <platform>all</platform>
+    <forum>http://forums.tvaddons.ag/forums/130-MAINTENANCE-TOOL</forum>
+    <website>http://www.tvaddons.ag/</website>
+  </extension>
 </addon>
 
 <addon id="script.audio.spotimc" version="1.0-beta5" name="Spotimc" provider-name="Mikel Azkolain">

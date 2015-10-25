@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    <addon id="Cheetah Smart Repo" name="CSRepoV0.1.0" version="0.1.0" provider-name="Cheetah Smart">
+    <addon id="repository.cs" name="CSRepo V0.1.0" version="0.1.0" provider-name="Cheetah Smart">
         <requires>
             <import addon="xbmc.addon" version="12.0.0"/>
         </requires>
