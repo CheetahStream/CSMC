@@ -1,4 +1,4 @@
-Config Wizard Development
+Cheetah Stream Official Repo
 ===============================
 
-Development of Config Wizard
+www.CheetahStream.com
