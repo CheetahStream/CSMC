@@ -1,1 +1,1 @@
-https://raw.githubusercontent.com/CheetahStream/CSMC/master/addons.zip
+https://raw.githubusercontent.com/CheetahStream/CSMC/master/addon.zip
