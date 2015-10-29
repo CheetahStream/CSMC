@@ -14,5 +14,5 @@ shortcut="HomeProgramButton3,plugin.video.usbwizard"
 shortcut="HomePictureButton1,plugin.video.sportsaccess"
 shortcut="HomePictureButton2,plugin.video.SportsDevil"
 shortcut="HomePictureButton3,plugin.video.espn_3"
-shortcut="HomePictureButton4,plugin.video.espn_3"
-shortcut="HomePictureButton5,plugin.video.kodistreams"
+shortcut="HomePictureButton4,plugin.video.kodistreams"
+
