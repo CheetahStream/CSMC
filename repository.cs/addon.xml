@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    <addon id="repository.cs" name="CSRepoV0.1.0" version="0.1.0" provider-name="Cheetah Smart">
+    <addon id="repository.cs" name="CSRepo V0.1.0" version="0.1.0" provider-name="Cheetah Smart">
         <requires>
             <import addon="xbmc.addon" version="12.0.0"/>
         </requires>
         <extension point="xbmc.addon.repository" name="CSRepoV0.1.0">
-            <info compressed="false">https://github.com/CheetahStream/CSMC/tree/master/_repo_repo/addons.xml</info>
-            <checksum>https://github.com/CheetahStream/CSMC/tree/master/_repo_repo/addons.xml.md5</checksum>
-            <datadir zip="true">https://github.com/CheetahStream/CSMC/tree/master/_repo_repo/</datadir>
+            <info compressed="false">https://raw.githubusercontent.com/CheetahStream/CSMC/master/_repo/addons.xml</info>
+            <checksum>https://raw.githubusercontent.com/CheetahStream/CSMC/master/_repo/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/CheetahStream/CSMC/master/_repo/</datadir>
             <hashes>false</hashes>
         </extension>
         <extension point="xbmc.addon.metadata">
