@@ -24,7 +24,7 @@ def findPHP(data, streamId):
     regex = "document.write\('.*?src=['\"]*(.*?.(?:php|html)[^&\"]*).*?['\" ]*.*?\)"
     php = regexUtils.findall(data, regex)
     if php:
-        return re.sub(r"\'\+\s*(?:f*id|ch)\s*\+\'", "%s" % streamId,php[0])
+        return re.sub(r"\'\+\s*(?:[fc]*id|ch)\s*\+\'", "%s" % streamId,php[0])
     
     regex = "document.write\('.*?src=['\"]*(.*?(?:f*id|ch)\s*\+'\.html*).*?['\" ]*.*?\)"
     html = regexUtils.findall(data, regex)
@@ -178,7 +178,7 @@ def findVideoFrameLink(page, data):
     if not frames:
         return None
     
-    iframes = regexUtils.findall(data, "(frame(?![^>]*cbox\.ws)(?![^>]*Publi)(?![^>]*chat\d*\.\w+)(?![^>]*ad122m)(?![^>]*adshell)(?![^>]*capacanal)(?![^>]*blacktvlive\.com)[^>]*\sheight\s*=\s*[\"']*([\%\d]+)(?:px)?[\"']*[^>]*>)")
+    iframes = regexUtils.findall(data, "(frame(?![^>]*cbox\.ws)(?![^>]*Publi)(?![^>]*dailymotion)(?![^>]*blacktvlive\.)(?![^>]*chat\d*\.\w+)(?![^>]*ad122m)(?![^>]*adshell)(?![^>]*capacanal)(?![^>]*blacktvlive\.com)[^>]*\sheight\s*=\s*[\"']*([\%\d]+)(?:px)?[\"']*[^>]*>)")
 
     if iframes:
         for iframe in iframes:
@@ -194,13 +194,15 @@ def findVideoFrameLink(page, data):
                     else:
                         width = int(m[0])
                     if width > minwidth:
-                        m = regexUtils.findall(iframe[0], '[\'"\s]src=["\']*\s*([^>"\' ]+)\s*[>"\']*')
+                        m = regexUtils.findall(iframe[0], '[\'"\s]+(?:src|SRC)\s*=\s*["\']*\s*([^>"\' ]+)\s*[>"\']*')
                         if m:
+                            if 'premiertv' in page:
+                                page = page+'/'
                             return urlparse.urljoin(urllib.unquote(page), m[0]).strip()
 
 
     # Alternative 1
-    iframes = regexUtils.findall(data, "(frame(?![^>]*cbox\.ws)(?![^>]*capacanal)(?![^>]*blacktvlive\.com)[^>]*[\"; ]height:\s*(\d+)[^>]*>)")
+    iframes = regexUtils.findall(data, "(frame(?![^>]*cbox\.ws)(?![^>]*capacanal)(?![^>]*dailymotion)[^>]*[\"; ]height:\s*(\d+)[^>]*>)")
     if iframes:
         for iframe in iframes:
             height = int(iframe[1])
@@ -209,16 +211,16 @@ def findVideoFrameLink(page, data):
                 if m:
                     width = int(m[0])
                     if width > minwidth:
-                        m = regexUtils.findall(iframe[0], '[\"; ]src=["\']*\s*([^>"\' ]+)\s*[>"\']*')
+                        m = regexUtils.findall(iframe[0], '[\"; ](?:src|SRC)=["\']*\s*([^>"\' ]+)\s*[>"\']*')
                         if m:
                             return urlparse.urljoin(urllib.unquote(page), m[0]).strip()
 
     # Alternative 2 (Frameset)
-    m = regexUtils.findall(data, '<FRAMESET[^>]+100%[^>]+>\s*<FRAME[^>]+src="([^"]+)"')
+    m = regexUtils.findall(data, '<(?:FRAMESET|frameset)[^>]+100%[^>]+>\s*<(?:FRAME|frame)[^>]+src="([^"]+)"')
     if m:
         return urlparse.urljoin(urllib.unquote(page), m[0]).strip()
     
-    m = regexUtils.findall(data, '<a href="([^"]+)" target="_blank"><img src="[^"]+" height="450" width="600" longdesc="[^"]+"/></a>')
+    m = regexUtils.findall(data, '<a\s*href="([^"]+)"\s*target="_blank"><img\s*src="[^"]+"\s*height="\d+"\s*width="\d+"\s*longdesc="[^"]+"\s*/></a>')
     if m:
         return urlparse.urljoin(urllib.unquote(page), m[0]).strip()
         

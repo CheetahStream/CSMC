@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import pyDes
 import urllib
 import re
-
 from regexUtils import parseTextToGroups
-
-from javascriptUtils import JsFunctions, JsUnpacker, JsUnpackerV2, JsUnpacker95High, JsUnwiser, JsUnwiser2, JsUnIonCube, JsUnFunc, JsUnPP, JsUnPush
-
+from javascriptUtils import JsFunctions, JsUnpacker, JsUnpacker95High, JsUnwiser, JsUnIonCube, JsUnFunc, JsUnPP, JsUnPush
 
 def encryptDES_ECB(data, key):
     data = data.encode()
@@ -31,6 +27,27 @@ def aesDec(data, key):
     padded_plaintext = cipher.decrypt(b64decode(data))
     padding_len = ord(padded_plaintext[-1])
     return padded_plaintext[:-padding_len]
+
+def wdecode(data):
+    from itertools import chain
+    
+    in_data = re.split('\W+',data)
+    pos = in_data.index(max(in_data,key=len))
+    codec = "".join(chain(*zip(in_data[pos][:5], in_data[pos+1][:5], in_data[pos+2][:5])))
+    data = "".join(chain(*zip(in_data[pos][5:], in_data[pos+1][5:], in_data[pos+2][5:])))
+    
+    ring = 0
+    res = []
+    for i in xrange(0,len(data),2):
+        modifier = -1
+        if (ord(codec[ring]) % 2):
+            modifier = 1
+        res.append( chr( int(data[i:i+2],36) - modifier ) )
+        
+        ring = ring + 1
+        if ring >= len(codec):
+            ring = 0
+    return ''.join(res)
 
 def encryptJimey(data):
     result = encryptDES_ECB(data,"PASSWORD").encode('base64').replace('/','').strip()
@@ -62,9 +79,7 @@ def doDemystify(data):
     #init jsFunctions and jsUnpacker
     jsF = JsFunctions()
     jsU = JsUnpacker()
-    jsUV2 =JsUnpackerV2()
     jsUW = JsUnwiser()
-    jsUW2 = JsUnwiser2()
     jsUI = JsUnIonCube()
     jsUF = JsUnFunc()
     jsUP = JsUnPP()
@@ -72,7 +87,7 @@ def doDemystify(data):
     JsPush = JsUnPush()
 
     # replace NUL
-    data = data.replace('\0','')
+    #data = data.replace('\0','')
 
 
     # unescape
@@ -94,6 +109,16 @@ def doDemystify(data):
         for g in r.findall(data):
             quoted=g
             data = data.replace(quoted, quoted.decode('unicode-escape'))
+
+    r = re.compile('(\'\+dec\("\w+"\)\+\')')
+    while r.findall(data):
+        for g in r.findall(data):
+            r2 = re.compile('dec\("(\w+)"\)')
+            for dec_data in r2.findall(g):
+                res = ''
+                for i in dec_data:
+                    res = res + chr(ord(i) ^ 123)
+            data = data.replace(g, res)
             
     r = re.compile('(eval\(decodeURIComponent\(atob\([\'"][^\'"]+[\'"]\)\)\);)')
     while r.findall(data):
@@ -101,6 +126,13 @@ def doDemystify(data):
             r2 = re.compile('eval\(decodeURIComponent\(atob\([\'"]([^\'"]+)[\'"]\)\)\);')
             for base64_data in r2.findall(g):
                 data = data.replace(g, urllib.unquote(base64_data.decode('base-64')))
+                
+    r = re.compile('(<script.*?str=\'@.*?str.replace)')
+    while r.findall(data):
+        for g in r.findall(data):
+            r2 = re.compile('.*?str=\'([^\']+)')
+            for escape_data in r2.findall(g):
+                data = data.replace(g, urllib.unquote(escape_data.replace('@','%')))
        
     r = re.compile('(base\([\'"]*[^\'"\)]+[\'"]*\))')
     while r.findall(data):
@@ -109,6 +141,14 @@ def doDemystify(data):
             for base64_data in r2.findall(g):
                 data = data.replace(g, urllib.unquote(base64_data.decode('base-64')))
                 escape_again=True
+    
+    r = re.compile('(eval\\(function\\(\w+,\w+,\w+,\w+.*?join\\(\'\'\\);*}\\(.*?\\))', flags=re.DOTALL)
+    for g in r.findall(data):
+        try:
+            data = data.replace(g, wdecode(g))
+            escape_again=True
+        except:
+            pass
 
     # n98c4d2c
     if 'function n98c4d2c(' in data:
@@ -172,26 +212,17 @@ def doDemystify(data):
                 data = data.replace(g, destreamer(g))
 
     # JS P,A,C,K,E,D
-    if jsU.containsPacked(data):
-        data = jsU.unpackAll(data)
-        
-    
-    #if still exists then apply v2
-    if jsUV2.containsPacked(data):
-        data = jsUV2.unpackAll(data)
-        escape_again=True
-        
     if jsU95.containsPacked(data):
         data = jsU95.unpackAll(data)
+        escape_again=True
+    
+    if jsU.containsPacked(data):
+        data = jsU.unpackAll(data)
         escape_again=True
 
     # JS W,I,S,E
     if jsUW.containsWise(data):
         data = jsUW.unwiseAll(data)
-        escape_again=True
-        
-    if jsUW2.containsWise(data):
-        data = jsUW2.unwiseAll(data)
         escape_again=True
 
     # JS IonCube
@@ -215,5 +246,3 @@ def doDemystify(data):
     if escape_again:
         data = doDemystify(data)
     return data
-
-    

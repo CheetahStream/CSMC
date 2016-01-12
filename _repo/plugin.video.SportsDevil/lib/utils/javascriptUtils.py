@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import re
-import math
 import urllib
 import base64
+import unpackstd
 import unpack95High
 from string import join
 import traceback, sys
@@ -76,114 +76,32 @@ class JsFunctions:
         for i in range(0,len(s)):
             r += chr((int(k[i%len(k)])^ord(s[i]))+7)
         return r
-    
 
-    
-    
 class JsUnpacker:
-
-    def unpackAll(self, data):
-        sPattern = '(eval\(function\(p,a,c,k,e,d\)\{while.*?)\s*</script>'
-        return re.sub(sPattern, lambda match: self.unpack(match.group(1)), data)
-    
-    def containsPacked(self, data):
-        return 'p,a,c,k,e,d' in data
-        
-    def unpack(self, sJavascript):
-        aSplit = sJavascript.split(";',")
-        p = str(aSplit[0])
-        aSplit = aSplit[1].split(",")
-        a = int(aSplit[0])
-        c = int(aSplit[1])
-        k = aSplit[2].split(".")[0].replace("'", '').split('|')
-        e = ''
-        d = ''
-        sUnpacked = str(self.__unpack(p, a, c, k, e, d))
-        return sUnpacked.replace('\\', '')
-    
-    def __unpack(self, p, a, c, k, e, d):
-        while (c > 1):
-            c = c -1
-            if (k[c]):
-                p = re.sub('\\b' + str(self.__itoa(c, a)) +'\\b', k[c], p)
-        return p
-    
-    def __itoa(self, num, radix):
-        result = ""
-        while num > 0:
-            result = "0123456789abcdefghijklmnopqrstuvwxyz"[num % radix] + result
-            num /= radix
-        return result
-        
-class JsUnpackerV2:
-
     def unpackAll(self, data):
         try:
             in_data=data
             sPattern = '(eval\\(function\\(p,a,c,k,e,d.*)'
             enc_data=re.compile(sPattern).findall(in_data)
-            #print 'enc_data',enc_data, len(enc_data)
             if len(enc_data)==0:
                 sPattern = '(eval\\(function\\(p,a,c,k,e,r.*)'
                 enc_data=re.compile(sPattern).findall(in_data)
-                #print 'enc_data packer...',enc_data
+                
 
             for enc_val in enc_data:
-                unpack_val=self.unpack(enc_val)
+                unpack_val=unpackstd.unpack(enc_val)
                 in_data=in_data.replace(enc_val,unpack_val)
+                in_data=in_data.replace('\\\'','\'')
             return in_data
         except: 
             traceback.print_exc(file=sys.stdout)
-            return data
-        
-        
+            return data.replace(enc_val,'')
+
     def containsPacked(self, data):
         return 'p,a,c,k,e,d' in data or 'p,a,c,k,e,r' in data
-        
-    def unpack(self,sJavascript,iteration=1, totaliterations=1  ):
 
-        aSplit = sJavascript.split("rn p}('")
-
-        p1,a1,c1,k1=('','0','0','')
-        ss="p1,a1,c1,k1=(\'"+aSplit[1].split(".spli")[0]+')' 
-        exec(ss)
-        
-        k1=k1.split('|')
-        aSplit = aSplit[1].split("))'")
-        e = ''
-        d = ''#32823
-        sUnpacked1 = str(self.__unpack(p1, a1, c1, k1, e, d,iteration))
-        if iteration>=totaliterations:
-            return sUnpacked1
-        else:
-            return self.unpack(sUnpacked1,iteration+1)
-
-    def __unpack(self,p, a, c, k, e, d, iteration,v=1):
-        while (c >= 1):
-            c = c -1
-            if (k[c]):
-                aa=str(self.__itoaNew(c, a))
-                p=re.sub('\\b' + aa +'\\b', k[c], p)# THIS IS Bloody slow!
-        return p
-
-    def __itoa(self,num, radix):
-
-        result = ""
-        if num==0: return '0'
-        while num > 0:
-            result = "0123456789abcdefghijklmnopqrstuvwxyz"[num % radix] + result
-            num /= radix
-        return result
-        
-    def __itoaNew(self,cc, a):
-        aa="" if cc < a else self.__itoaNew(int(cc / a),a) 
-        cc = (cc % a)
-        bb=chr(cc + 29) if cc> 35 else str(self.__itoa(cc,36))
-        return aa+bb
-          
 
 class JsUnpacker95High:
-
     def unpackAll(self, data):
         try:
             in_data=data
@@ -201,13 +119,11 @@ class JsUnpacker95High:
             return in_data
         except: 
             traceback.print_exc(file=sys.stdout)
-            return data
-        
-        
+            return data.replace(enc_val,'')
+
     def containsPacked(self, data):
-        return 'p,a,c,k,e,d' in data or 'p,a,c,k,e,r' in data
-    
-    
+        return r'[\xa1-\xff]' in data
+
 
 class JsUnIonCube:
     def ionX(self, x, arrayX):
@@ -324,80 +240,6 @@ class JsUnwiser:
             return self.unwise(ret)
         else:
             return ret
-        
-class JsUnwiser2:
-    def unwiseAll(self, data):
-        try:
-            in_data=data
-            sPattern = 'eval\\(function\\(\w+,\w+,\w+,\w+.*?}\\((.*?)\\)'
-            wise_data=re.compile(sPattern).findall(in_data)
-            for wise_val in wise_data:
-                unpack_val=self.unwise(wise_val)
-                #print '\nunpack_val',unpack_val
-                in_data=in_data.replace(wise_val,unpack_val)
-            return re.sub("eval\(function\(\w+,\w+,\w+,\w+.*?join\(''\);}", "", in_data, count=1, flags=re.DOTALL)
-        except: 
-            traceback.print_exc(file=sys.stdout)
-            return data
-        
-    def containsWise(self, data):
-        return 'var lIll=0' in data
-        
-    def unwise(self, sJavascript):
-        #print 'sJavascript',sJavascript
-        page_value=""
-        try:        
-            ss="f,u,c,k=("+sJavascript+')' 
-            exec (ss)
-            page_value=self.__unpack(f,u,c,k)
-        except: traceback.print_exc(file=sys.stdout)
-        return page_value
-        
-    def __unpack( self,w, i, s, e):
-        lIll = 0;
-        ll1I = 0;
-        Il1l = 0;
-        ll1l = [];
-        l1lI = [];
-        while True:
-            if (lIll < 5):
-                l1lI.append(w[lIll])
-            elif (lIll < len(w)):
-                ll1l.append(w[lIll]);
-            lIll+=1;
-            if (ll1I < 5):
-                l1lI.append(i[ll1I])
-            elif (ll1I < len(i)):
-                ll1l.append(i[ll1I])
-            ll1I+=1;
-            if (Il1l < 5):
-                l1lI.append(s[Il1l])
-            elif (Il1l < len(s)):
-                ll1l.append(s[Il1l]);
-            Il1l+=1;
-            if (len(w) + len(i) + len(s) + len(e) == len(ll1l) + len(l1lI) + len(e)):
-                break;
-            
-        lI1l = ''.join(ll1l)#.join('');
-        I1lI = ''.join(l1lI)#.join('');
-        ll1I = 0;
-        l1ll = [];
-        for lIll in range(0,len(ll1l),2):
-            #print 'array i',lIll,len(ll1l)
-            ll11 = -1;
-            if ( ord(I1lI[ll1I]) % 2):
-                ll11 = 1;
-            #print 'val is ', lI1l[lIll: lIll+2]
-            l1ll.append(chr(    int(lI1l[lIll: lIll+2], 36) - ll11));
-            ll1I+=1;
-            if (ll1I >= len(l1lI)):
-                ll1I = 0;
-        ret=''.join(l1ll)
-        if 'var lIll=0' in ret:
-            ret=re.compile('eval\(function\(\w+,\w+,\w+,\w+.*}\((.*?)\)').findall(ret)[0] 
-            return self.unwise(ret)
-        else:
-            return ret
 
 class JsUnFunc:
     def unFuncALL(self,data):
@@ -440,12 +282,12 @@ class JsUnPP:
         
         for i in t_data:
             out_data = removeNonAscii(str(base64.b16decode(i.upper())))
-            data = re.sub(r"var\s*t[^}]+}", out_data, data)
+            data = re.sub(r"var\s*t=\"[^}]+}", out_data, data, count=1)
                 
         return data
     def containUnPP(self,data):
         return 'parseInt(t.substr' in data
-    
+
 class JsUnPush:
     def UnPush(self,data):
         in_data = data
