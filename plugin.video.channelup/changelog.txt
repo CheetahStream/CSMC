@@ -1,0 +1,11 @@
+v1.1.1
+Added Genres
+
+V1.0.3
+Added Cache Channels
+
+v1.0.2
+Added Option Just to Show HD
+
+v1.0.0
+Initial Release
