@@ -1,4 +1,4 @@
-shortcut="HomeVideosButton1,plugin.video.specto”
+shortcut="HomeVideosButton1,plugin.video.icefilms"
 shortcut="HomeVideosButton2,plugin.video.1channel"
 shortcut="HomeVideosButton3,plugin.video.icefilms"
 shortcut="HomeVideosButton4,plugin.video.phstreams"
