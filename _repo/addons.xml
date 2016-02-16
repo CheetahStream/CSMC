@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addons>
-<addon id="plugin.video.4kking" name="4k Media [COLOR red]DISCONTINUED[/COLOR]" version="1.0.6" provider-name="Pipcan">
+<addon id="plugin.video.DecadoDocs" name="Decado Documentaries" version="1.0.1" provider-name="MetalKettle">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
-	<import addon="script.module.urlresolver"  version="2.1.2"/>
-	<import addon="script.module.addon.common" />
+    <import addon="script.module.t0mm0.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="3.0.0"/>
+    <import addon="script.common.plugin.cache" version="2.5.2"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>video</provides>
@@ -12,70 +13,112 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="en"></summary>
     <description lang="en"></description>
-	<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon</disclaimer>
     <platform>all</platform>
   </extension>
 </addon>
 
-<addon id="plugin.video.channelup" name="Channel Up Tv" version="0.0.3" provider-name="r3b00t">
+<addon id="plugin.video.md9movies" name="9Movies" version="1.0.7" provider-name="Mucky Duck">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.t0mm0.common" version="2.1.1"/>
-    <import addon="plugin.video.footballreplays" version="0.0.1"/>
+	<import addon="script.module.addon.common" />
+	<import addon="script.module.metahandler" version="2.5.1"/>
+	<import addon="script.module.requests" />
+	<import addon="repository.mdrepo" />
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Channel Up Tv</summary>
-    <description lang="en">Stream all of your favourites sports,movies and tv from Channel Up Tv Streams</description>
+    <summary lang="en">Stream Movies From The 9movies.to WebSite</summary>
+    <description lang="en">Stream Movies From The 9movies.to WebSite</description>
+	<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon or have any affiliation with the website owners</disclaimer>
     <platform>all</platform>
   </extension>
-  <extension point="xbmc.service" library="service.py" start="login" />
 </addon>
 
-<addon id="plugin.video.specto" name="Specto - ... Fork" version="2016.02.06.1" provider-name="mrknow">
-	<requires>
-		<import addon="xbmc.python" version="2.1.0" />
-		<import addon="script.module.requests" version="1.0.0" />
-		<import addon="script.module.metahandler" optional="true" />
-		<import addon="plugin.video.youtube" optional="true" />
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="default.py">
-		<provides>video</provides>
-	</extension>
-	<extension point="xbmc.service" library="service.py" start="startup" />
-	<extension point="xbmc.addon.metadata">
-		<summary lang="en">Mrknow fork of ...</summary>
-		<description lang="en">Mrknow fork of ..., support https://github.com/mrknow/filmkodi/issues.</description>
-		<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon. The author does not have any affiliation with the content provider.
-		</disclaimer>
-		<forum>https://github.com/mrknow/filmkodi/issues</forum>
-		<source>http://filmkodi.com/repository/</source>
-		<website>http://filmkodi.com/en/wtyczka-specto-fork-genesis/</website>
-		<platform>all</platform>
-	</extension>
-</addon>
-
-<addon
-  id="plugin.video.SportsDevil"
-  version="2"
-  name="SportsDevil"
-  provider-name="MaxMustermann">
+<addon id="plugin.video.mdniter" name="niter" version="1.0.2" provider-name="Mucky Duck">
   <requires>
-   <import addon="xbmc.python" version="2.14.0"/>
-   <import addon="script.module.requests" />
-   <import addon="script.module.pydevd" version="4.4.0" optional="true"/>
+    <import addon="xbmc.python" version="2.1.0"/>
+	<import addon="script.module.urlresolver"  version="2.1.2"/>
+	<import addon="script.module.addon.common" />
+	<import addon="script.module.metahandler" version="2.5.1"/>
+	<import addon="script.module.requests" />
+	<import addon="repository.mdrepo" />
   </requires>
-  <extension
-    point="xbmc.python.pluginsource"
-    library="default.py">
-   <provides>video</provides>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary>Play videos of different sports streaming sites</summary>
-    <description>Play videos of different sports streaming sites</description>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+    <summary lang="en">Stream Movies From The niter.co WebSite</summary>
+    <description lang="en">Stream Movies From The niter.co WebSite</description>
+	<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon or have any affiliation with the website owners.</disclaimer>
+    <platform>all</platform>
+  </extension>
+</addon>
+
+<addon id="plugin.video.mdpubfilm" name="PubFilm" version="1.0.3" provider-name="Mucky Duck">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+	<import addon="script.module.addon.common" />
+	<import addon="script.module.metahandler" version="2.5.1"/>
+	<import addon="script.module.requests" />
+	<import addon="repository.mdrepo" />
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Stream Movies And TV-Shows From pubfilm.com</summary>
+    <description lang="en">Stream Movies And TV-Shows From pubfilm.com</description>
+	<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon or have any affiliation with the website owners.</disclaimer>
+    <platform>all</platform>
+  </extension>
+</addon>
+
+<addon id="plugin.video.teevee"
+	name="TeeVee"
+	version="1.0.1"
+	provider-name="natko1412">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.beautifulsoup" version="3.2.1"/>
+    <import addon="script.module.urlresolver" version="2.5.0" />
+    <import addon="script.module.metahandler" />
+    <import addon="script.module.axel.downloader" version="0.2.0" optional="true"/>
+    <import addon="script.module.pyxbmct" version="1.1.4" />
+
+
+
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary>Watch your favourite TV Shows!</summary>
+        <description>Watch your favourite TV Shows!</description>
+
+    <platform>all</platform>
+    <forum>forums.tvaddons.ag</forum>
+
+  </extension>
+</addon>
+
+<addon id="plugin.video.xmovies8" name="XMovies8" version="1.1.2" provider-name="MetalKettle">
+  <requires>
+    <import addon="script.module.simplejson" version="3.3.0"/>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.t0mm0.common" version="2.0.0"/>
+    <import addon="plugin.video.youtube" version="3.0.0"/>
+    <import addon="script.module.urlresolver"  version="2.1.2"/>
+    <import addon="script.common.plugin.cache" version="2.5.2"/>
+    <import addon="script.module.metahandler" version="2.5.1"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en"></summary>
+    <description lang="en"></description>
     <platform>all</platform>
   </extension>
 </addon>
@@ -95,5 +138,49 @@
             <description>The description can be longer. Using [CR] you can create a newline. The use of other markup is not advised.</description>
             <platform>all</platform>
     </extension>
+</addon>
+
+<addon id="repository.filmkodi.com" name="Filmkodi.com repository - MRKNOW" version="2.1.0" provider-name="Mrknow">
+	<extension point="xbmc.addon.repository" name="Filmkodi.com Kodi Add-on Repository">
+		<info compressed="false">http://kodi.filmkodi.com/addons.xml</info>
+		<checksum>http://kodi.filmkodi.com/addons.xml.md5</checksum>
+		<datadir zip="true">http://kodi.filmkodi.com/</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Install Add-ons  from filmkodi.com</summary>
+		<summary lang="pl">Zainstaluj wtyczki z filmkodi.com</summary>
+		<description lang="en">Add-ons from filmkodi.com (mrknow.pl) repository.</description>
+		<description lang="pl">Wtyczki z nieoficjalnego, repozytorium polskiego mrknow.pl..</description>
+		<disclaimer lang="en">Repository has non-comercial nature. Created by enthusiasts, acting in good faith.</disclaimer>
+		<disclaimer lang="pl">Zawartość repozytorium ma charakter niekomercyjny, wtyczki tworzone przez pasjonatów, .</disclaimer>
+		<platform>all</platform>
+	</extension>
+</addon>
+
+<addon id="repository.mdrepo" name="Mucky Ducks Repo" version="1.0.2" provider-name="Mucky Duck">
+	<extension point="xbmc.addon.repository" name="Mucky Ducks Repo">
+		<info compressed="false">https://raw.githubusercontent.com/mucky-duck/mdrepo/master/addons.xml</info>
+		<checksum>https://raw.githubusercontent.com/mucky-duck/mdrepo/master/addons.xml.md5</checksum>
+		<datadir zip="true">https://raw.githubusercontent.com/mucky-duck/mdrepo/master/</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Mucky Ducks Repo</summary>
+		<description>Download And Install Addons Developed By Mucky Duck And Various Other Developers </description>
+		<disclaimer>The owners and submitters to this repository do not host or distribute any of the content displayed by these addons nor do they have any affiliation with the content providers.</disclaimer>
+		<platform>all</platform>
+	</extension>
+</addon>
+
+<addon id="repo.natko1412" name="natko1412 repo" version="2.0.0" provider-name="natko1412">
+<extension point="xbmc.addon.repository" name="Natko's Addon Repository">
+<info compressed="false">https://offshoregit.com/natko1412/addons.xml</info>
+<checksum>https://offshoregit.com/natko1412/addons.xml.md5</checksum>
+<datadir zip="true">https://offshoregit.com/natko1412/zips/</datadir>
+</extension>
+<extension point="xbmc.addon.metadata">
+<summary>Install all of Natko's Addons</summary>
+<description>Download and install addons by natko1412. For support visit XBMC thread on forum.hr</description>
+<platform>all</platform>
+</extension>
 </addon>
 </addons>
